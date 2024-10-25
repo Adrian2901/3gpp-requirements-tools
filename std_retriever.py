@@ -11,15 +11,19 @@ import zipfile
 import pandas as pd 
 import shutil
 
+
+with open('config.json', 'r') as file:
+    config = json.load(file)
+
 ##############################################
 # Configuration variables
-host = 'www.3gpp.org'
-ftp_directory_path = 'Specs/archive' 
-download_folder_path = 'downloaded_standards'
-unzipped_folder_path = 'unzipped_standards'
-excel_spec_file = 'Specification_list.xlsx'
-standard_specs_folder_path = 'standards_specs'
-phrase = 'General packet radio'
+host = config["ftp_host_address"]
+ftp_directory_path = config["ftp_directory_path"] 
+download_folder_path = config["download_folder_path"]
+unzipped_folder_path = config["unzipped_standards_folder_path"]
+excel_spec_file = config["excel_spec_file"]
+standard_specs_folder_path = config["standard_specs_folder"]
+phrase = config["search_phrase"]
 
 ##############################################
 #
