@@ -22,7 +22,7 @@ ftp_directory_path = config["ftp_directory_path"]
 download_folder_path = config["download_folder_path"]
 unzipped_folder_path = config["unzipped_standards_folder_path"]
 excel_spec_file = config["excel_spec_file"]
-standard_specs_folder_path = config["standard_specs_folder"]
+standard_specs_folder_path = "standard_specs_folder"
 phrase = config["search_phrase"]
 
 ##############################################
