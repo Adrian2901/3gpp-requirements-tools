@@ -6,6 +6,7 @@ from docx import Document
 import requests
 import json
 import re
+from doc2docx import convert
 
 global llm_ip
 llm_ip = "localhost:11435"
@@ -58,6 +59,10 @@ def process_docx_files_in_folder(folder_path, search_word, output_csv, config):
 
         csvwriter_possible.writerow(['File', 'Chapter', 'Paragraph', 'LLM response'])
         csvwriter_no.writerow(['File', 'Chapter', 'Paragraph', 'LLM response'])
+
+        for filename in os.listdir(folder_path):
+            if filename.endswith('.doc'):
+                convert(os.path.join(folder_path, filename))
 
         for filename in os.listdir(folder_path):
             if filename.endswith('.docx'):

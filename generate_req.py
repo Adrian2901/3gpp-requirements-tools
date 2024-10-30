@@ -34,6 +34,7 @@ def generate_req(config):
         df.at[i, 'Requirement'] = response
     # Save the new dataframe to a new csv file
     df.to_csv('outputs/new_requirements.csv', sep=';', index=False)
+    print('Finished generating requirements!')
 
 
 with open('prompts.json', 'r') as f:
