@@ -3,6 +3,7 @@ import os
 import tkinter as tk
 from tkinter import ttk
 import filter_docs
+import generate_req
 
 # File path for the configuration file
 CONFIG_FILE = "config.json"
@@ -28,7 +29,7 @@ keyword_var=tk.StringVar(value=' '.join(config['keywords']).replace(" ", ","))
 model_var=config['model_name']
 
 def run():
-    status_label.config(text="Running...")
+    status_label.config(text="Filtering the documents...")
     root.update()
     config = {
         'llm_address': ip_var.get(),
@@ -42,6 +43,9 @@ def run():
     with open(CONFIG_FILE, 'w') as f:
         json.dump(config, f)
     filter_docs.execute_filtering(config)
+    status_label.config(text="Generating requirements...")
+    root.update()
+    generate_req.generate_req(config)
     status_label.config(text="Done! Check the output folder for the results.")
 
 def on_model_select(event):

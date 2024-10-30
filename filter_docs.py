@@ -9,11 +9,13 @@ import re
 
 global llm_ip
 llm_ip = "localhost:11435"
+global llm
+llm = "llama3.1"
 
 def ask_llm(paragraph):
     url = f'http://{llm_ip}/api/generate'
     data = {
-        "model": "llama3.1:70b",
+        "model": llm,
         "prompt": prompts['verify_context'] + paragraph,
         "stream": False
         }
@@ -49,8 +51,8 @@ def extract_paragraphs_with_keywords(doc, keywords, filename, config):
 
 def process_docx_files_in_folder(folder_path, search_word, output_csv, config):
     requirements = []
-    with open(output_csv[0], 'w', newline='', encoding='utf-8') as csvfile_possible, \
-         open(output_csv[1], 'w', newline='', encoding='utf-8') as csvfile_no:
+    with open("outputs/latency_paragraphs.csv", 'w', newline='', encoding='utf-8') as csvfile_possible, \
+         open("outputs/latency_no_paragraphs.csv", 'w', newline='', encoding='utf-8') as csvfile_no:
         csvwriter_possible = csv.writer(csvfile_possible, delimiter=';')
         csvwriter_no = csv.writer(csvfile_no, delimiter=';')
 
@@ -82,6 +84,7 @@ with open('prompts.json', 'r') as f:
 
 def execute_filtering(config):
     llm_ip = config['llm_address']
+    llm = config['model_name']
     folder_path = config['folder_path']
     keywords = config['keywords']
     output_csv = config['latency_paragraphs']
