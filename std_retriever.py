@@ -23,7 +23,8 @@ download_folder_path = config["download_folder_path"]
 unzipped_folder_path = config["unzipped_standards_folder_path"]
 excel_spec_file = config["excel_spec_file"]
 standard_specs_folder_path = "standard_specs_folder"
-phrase = config["search_phrase"]
+phrase = config["phrase"]
+series_no = config["series_no"]
 
 ##############################################
 #
@@ -144,7 +145,7 @@ def unzip_all_in_folder(folder_path, extract_to): # This function is created by 
             print(f'Skipping {file_name}, not a zip file.')
 
 
-def search_title(folder_path, xlsx_file, phrase=None): # folder_path: where json files will be stored, xlsx_file: excel file thatt holds the spec_no s and titles.
+def search_title(folder_path, xlsx_file, phrase:str="", series_no:str=""): # folder_path: where json files will be stored, xlsx_file: excel file thatt holds the spec_no s and titles.
     os.makedirs(folder_path, exist_ok=True)
     
     # If a phrase is provided, create a regular expression based on it; otherwise, match all titles
@@ -161,6 +162,10 @@ def search_title(folder_path, xlsx_file, phrase=None): # folder_path: where json
         title:str = row["Title"]
         
         current_series = current_spec.split('.')[0]
+
+        if (series_no and current_series != series_no): # If a series number is specified and it does not match the current series number we don't save the specifications
+            continue
+
         if(current_series != previous_series): # Then save data of previous series to a json file and reset the data
             if(previous_series): # since when we start at first there is no previous series
                 json_filename = os.path.join(folder_path, f"{previous_series}_series.json")
@@ -207,14 +212,12 @@ def search_title(folder_path, xlsx_file, phrase=None): # folder_path: where json
 
 def main():
     try:
-        # TODO: Refactor all of the variable into json.config file 
-
         # create the connection to FTP server and change to the wanted directory
         ftp_client = FTPClient(host)
         ftp_client.change_directory(ftp_directory_path)
 
         #* search by title if necessary
-        standards =search_title(standard_specs_folder_path, excel_spec_file, phrase)
+        standards = search_title(standard_specs_folder_path, excel_spec_file, phrase, series_no)
 
         for standard in standards:
             get_standards(ftp_client, os.path.join(standard_specs_folder_path, standard) , download_folder_path)
