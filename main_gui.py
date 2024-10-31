@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 import filter_docs
 import generate_req
+import std_retriever
 
 # File path for the configuration file
 CONFIG_FILE = "config.json"
@@ -37,9 +38,7 @@ tab2 = ttk.Frame(tabControl)
 tabControl.add(tab2, text='Download Standards')
 tabControl.pack(expand=1, fill="both")
 
-def run():
-    status_label.config(text="Filtering the documents...")
-    root.update()
+def save_config():
     config = {
         'llm_address': ip_var.get(),
         'folder_path': path_var.get(),
@@ -47,10 +46,19 @@ def run():
         'keywords': keyword_var.get().split(","),
         'ignored_sections': ["References", "Appendix", "Definitions", "Abbreviations"],
         'model_name': model_var,
-        'verbose': False
+        'verbose': False,
+        'download_folder_path': download_dir_var.get(),
+        'phrase': search_keyword_var.get(),
+        'series_no': series_var.get()
     }
     with open(CONFIG_FILE, 'w') as f:
         json.dump(config, f)
+    return config
+
+def run():
+    status_label.config(text="Filtering the documents...")
+    root.update()
+    config = save_config()
     try:
         filter_docs.execute_filtering(config)
         status_label.config(text="Generating requirements...")
@@ -119,7 +127,8 @@ status_label.grid(row=6,column=1)
 def download():
     status2_label.config(text="Downloading the standards...")
     root.update()
-    # TODO: Implement the download function
+    config = save_config()
+    std_retriever.download(config)
     status2_label.config(text="Done! Check the output folder for the results.")
 
 def select_download_dir():
@@ -127,9 +136,9 @@ def select_download_dir():
     download_dir_entry.delete(0, tk.END)
     download_dir_entry.insert(0, download_dir_var)
 
-series_var=tk.StringVar()
-search_keyword_var=tk.StringVar()
-download_dir_var=tk.StringVar()
+series_var=tk.StringVar(value=config['series_no'])
+search_keyword_var=tk.StringVar(value=config['phrase'])
+download_dir_var=tk.StringVar(value=config['download_folder_path'])
 
 series_label = tk.Label(tab2, text = 'Series number', font=('arial',10))
 series_entry = tk.Entry(tab2, textvariable = series_var, font=('arial',10,'normal'), width=70)
