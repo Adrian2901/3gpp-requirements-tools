@@ -63,6 +63,7 @@ def process_docx_files_in_folder(folder_path, search_word, output_csv, config):
         for filename in os.listdir(folder_path):
             if filename.endswith('.doc'):
                 convert(os.path.join(folder_path, filename))
+                os.remove(os.path.join(folder_path, filename))
 
         for filename in os.listdir(folder_path):
             if filename.endswith('.docx'):

@@ -28,6 +28,13 @@ output_var=tk.StringVar(value=config['latency_paragraphs'])
 keyword_var=tk.StringVar(value=' '.join(config['keywords']).replace(" ", ","))
 model_var=config['model_name']
 
+tabControl = ttk.Notebook(root)
+tab1 = ttk.Frame(tabControl)
+tabControl.add(tab1, text='Generate Requirements')
+tab2 = ttk.Frame(tabControl)
+tabControl.add(tab2, text='Download Standards')
+tabControl.pack(expand=1, fill="both")
+
 def run():
     status_label.config(text="Filtering the documents...")
     root.update()
@@ -42,11 +49,14 @@ def run():
     }
     with open(CONFIG_FILE, 'w') as f:
         json.dump(config, f)
-    filter_docs.execute_filtering(config)
-    status_label.config(text="Generating requirements...")
-    root.update()
-    generate_req.generate_req(config)
-    status_label.config(text="Done! Check the output folder for the results.")
+    try:
+        filter_docs.execute_filtering(config)
+        status_label.config(text="Generating requirements...")
+        root.update()
+        generate_req.generate_req(config)
+        status_label.config(text="Done! Check the output folder for the results.")
+    except Exception as e:
+        status_label.config(text=f"An error occurred! Please try again.")
 
 def on_model_select(event):
     model_var = combo_box.get()
@@ -56,25 +66,25 @@ width = config.get("width", 500)
 height = config.get("height", 350)
 root.geometry(f"{width}x{height}")
 
-ip_label = tk.Label(root, text = 'LLM address:port', font=('arial',10))
-ip_entry = tk.Entry(root,textvariable = ip_var, font=('arial',10,'normal'), width=50)
+ip_label = tk.Label(tab1, text = 'LLM address:port', font=('arial',10))
+ip_entry = tk.Entry(tab1, textvariable = ip_var, font=('arial',10,'normal'), width=50)
 
-path_label = tk.Label(root, text = 'Input folder path', font=('arial',10))
-path_entry = tk.Entry(root,textvariable = path_var, font=('arial',10,'normal'), width=50)
+path_label = tk.Label(tab1, text = 'Input folder path', font=('arial',10))
+path_entry = tk.Entry(tab1, textvariable = path_var, font=('arial',10,'normal'), width=50)
 
-output_label = tk.Label(root, text = 'Output file path', font = ('arial',10,'normal'))
-output_entry=tk.Entry(root, textvariable = output_var, font = ('arial',10,'normal'), width=50)
+output_label = tk.Label(tab1, text = 'Output file path', font = ('arial',10,'normal'))
+output_entry=tk.Entry(tab1, textvariable = output_var, font = ('arial',10,'normal'), width=50)
 
-keyword_label = tk.Label(root, text = 'Keywords', font = ('arial',10,'normal'))
-keyword_entry=tk.Entry(root, textvariable = keyword_var, font = ('arial',10,'normal'), width=50)
+keyword_label = tk.Label(tab1, text = 'Keywords', font = ('arial',10,'normal'))
+keyword_entry=tk.Entry(tab1, textvariable = keyword_var, font = ('arial',10,'normal'), width=50)
 
-model_label = tk.Label(root, text = 'Language Model', font = ('arial',10,'normal'))
-model_entry=ttk.Combobox(root, values=["llama3.1", "llama3.1:70b", "llama3.1:405b"], width=55)
+model_label = tk.Label(tab1, text = 'Language Model', font = ('arial',10,'normal'))
+model_entry=ttk.Combobox(tab1, values=["llama3.1", "llama3.1:70b", "llama3.1:405b"], width=55)
 model_entry.set(model_var)
 
-run_btn=tk.Button(root,text = 'Run', command = run, width=30)
+run_btn=tk.Button(tab1,text = 'Run', command = run, width=30)
 
-status_label = tk.Label(root, text = '', font = ('arial',10,'normal'))
+status_label = tk.Label(tab1, text = '', font = ('arial',10,'normal'))
 
 ip_label.grid(row=0,column=0, padx=5)
 ip_entry.grid(row=0,column=1, pady=10)
@@ -89,6 +99,31 @@ keyword_entry.grid(row=4,column=1, pady=10)
 
 run_btn.grid(row=5,column=1)
 status_label.grid(row=6,column=1)
+
+def download():
+    status2_label.config(text="Downloading the standards...")
+    root.update()
+    # TODO: Implement the download function
+    status2_label.config(text="Done! Check the output folder for the results.")
+
+series_var=tk.StringVar()
+search_keyword_var=tk.StringVar()
+
+series_label = tk.Label(tab2, text = 'Series number', font=('arial',10))
+series_entry = tk.Entry(tab2, textvariable = series_var, font=('arial',10,'normal'), width=50)
+
+search_keyword_label = tk.Label(tab2, text = 'Search keyword', font=('arial',10))
+search_keyword_entry = tk.Entry(tab2, textvariable = search_keyword_var, font=('arial',10,'normal'), width=50)
+
+download_btn=tk.Button(tab2, text = 'Download', command = download, width=30)
+status2_label = tk.Label(tab2, text = '', font = ('arial',10,'normal'))
+
+series_label.grid(row=0,column=0, padx=5)
+series_entry.grid(row=0,column=1, pady=10)
+search_keyword_label.grid(row=1,column=0, padx=5)
+search_keyword_entry.grid(row=1,column=1, pady=10)
+download_btn.grid(row=3,column=1)
+status2_label.grid(row=4,column=1)
 
 # Run the application
 root.mainloop()
