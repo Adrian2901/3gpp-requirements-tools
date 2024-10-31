@@ -1,1 +1,16 @@
-{"llm_address": "localhost:11435", "folder_path": "standards/23_standards", "latency_paragraphs": "outputs/latency_paragraphs.csv", "keywords": ["latency", "latencies"], "ignored_sections": ["References", "Appendix", "Definitions", "Abbreviations"], "model_name": "llama3.1:70b", "verbose": false}
+{
+    "llm_address": "localhost:11435",
+    "folder_path": "standards/23_standards",
+    "latency_paragraphs": "outputs/latency_paragraphs.csv",
+    "keywords": ["latency", "latencies"],
+    "ignored_sections": ["References", "Appendix", "Definitions", "Abbreviations"],
+    "model_name": "llama3.1:70b", 
+    "verbose": false,
+    "download_folder_path": "downloaded_standards",
+    "ftp_host_address": "www.3gpp.org",
+    "ftp_directory_path": "Specs/archive",
+    "unzipped_standards_folder_path": "unzipped_standards",
+    "excel_spec_file": "Specification_list.xlsx",
+    "phrase": "",
+    "series_no": ""
+}
