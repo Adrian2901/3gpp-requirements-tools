@@ -2,10 +2,16 @@ import pandas as pd
 import json
 import requests
 
+global llm_ip
+llm_ip = "localhost:11435"
+global llm
+llm = "llama3.1"
+
+
 def ask_llm(paragraph):
-    url = 'http://localhost:11435/api/generate'
+    url = f'http://{llm_ip}/api/generate'
     data = {
-        "model": "llama3.1:70b",
+        "model": llm,
         "prompt": prompts['generate_requirement'] + paragraph,
         "stream": False
         }
@@ -14,9 +20,11 @@ def ask_llm(paragraph):
     json_data = json.loads(response.text)
     return json_data['response']
 
-def generate_req(file):
+def generate_req(config):
+    llm_ip = config['llm_address']
+    llm = config['model_name']
     # Read the Paragraph column
-    df = pd.read_csv(file , sep=';')
+    df = pd.read_csv("outputs/latency_paragraphs.csv" , sep=';')
     column = df['Paragraph']
     # ask llm for each row in the column
     print('Generating requirements...')
@@ -26,12 +34,14 @@ def generate_req(file):
         df.at[i, 'Requirement'] = response
     # Save the new dataframe to a new csv file
     df.to_csv('outputs/new_requirements.csv', sep=';', index=False)
+    print('Finished generating requirements!')
 
 
 with open('prompts.json', 'r') as f:
     prompts = json.load(f)
 
-generate_req('outputs/latency_paragraphs.csv')
+if __name__ == '__main__':
+    generate_req('outputs/latency_paragraphs.csv')
 
 
 
