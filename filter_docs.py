@@ -29,7 +29,8 @@ def extract_paragraphs_with_keywords(doc, keywords, filename, config):
     paragraphs = []
     requirements = []
     current_section = ""
-    unit_regex = re.compile(rf'\b\d+\s*{re.escape("ms")}\b\.?', re.IGNORECASE)
+    selected_units = config.get("checked_units", []) # Builds a list of compiled regexes for selected units
+    unit_regexes = [re.compile(config['units'][unit], re.IGNORECASE) for unit in selected_units if unit in config['units']]
     requirement_regex = re.compile(r'^\[\w+[\-\.\d]*\]', re.IGNORECASE)
     for paragraph in doc.paragraphs:
         if paragraph.style.name.startswith('Heading'):
@@ -40,10 +41,9 @@ def extract_paragraphs_with_keywords(doc, keywords, filename, config):
             # Check if the section is not ignored
             if current_section != "" and not any(ignored_section in current_section for ignored_section in config['ignored_sections']):
                 paragraphs.append((filename, current_section, paragraph.text))
-        # Check if the paragraph contains a ms unit
-        elif unit_regex.search(paragraph.text):
-            # Check if the paragraph is a requirement (follows the pattern [R-X...])
-            if requirement_regex.search(paragraph.text):
+        # Check if the paragraph matches any of the selected unit regexes
+        elif any(unit_regex.search(paragraph.text) for unit_regex in unit_regexes):
+            if requirement_regex.search(paragraph.text): # Check if the paragraph is a requirement (follows the pattern [R-X...])
                 requirements.append((filename, current_section, paragraph.text))
             else:
                 paragraphs.append((filename, current_section, paragraph.text))
