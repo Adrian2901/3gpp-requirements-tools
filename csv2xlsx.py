@@ -32,7 +32,11 @@ def highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_form
                 sheet.write(row_idx, 2, paragraph, wrap_format)
             # sheet.set_row(row_idx, None, wrap_format)  # Enable text wrapping for the entire row
 
-def csv_to_xlsx(input_csv, output_xlsx, keyword):
+# Defautl input_csv is a list of the three csv files containing the default names we used in the project
+def csv_to_xlsx(config):
+    keyword = config['keywords'][0] # keyword to highlight TODO: iterate thru the list of keywords
+
+    input_csv=["outputs/new_requirements.csv", "outputs\latency_paragraphs.csv", "outputs\latency_no_paragraphs.csv"] #input csv files(not specified in config for now)
     print("Processing CSV to XLSX...")
 
     print(input_csv[0])
@@ -46,7 +50,7 @@ def csv_to_xlsx(input_csv, output_xlsx, keyword):
     latency_no_paragraphs = input_csv[2]; # "outputs\latency_no_paragraphs.csv"
 
     # Create a new XLSX file
-    workbook = xlsxwriter.Workbook(output_xlsx)
+    workbook = xlsxwriter.Workbook("outputs/output.xlsx") #hardcoded it, can be changed but it might not be necessary
 
     # Add a format for the header cells
     header_format = workbook.add_format({'bold': True, 'align': 'center', 'valign': 'vcenter', 'fg_color': '#D7E4BC'})
@@ -121,13 +125,13 @@ def csv_to_xlsx(input_csv, output_xlsx, keyword):
 
     #close the workbook
     workbook.close()
-    print(f"Conversion complete! Output saved to '{output_xlsx}'.")
+    print("Conversion complete! Output saved to outputs/output.xlsx.")
    
 
 
 # Example usage
-outputs = ['outputs\\new_requirements.csv', "outputs\latency_paragraphs.csv", "outputs\latency_no_paragraphs.csv"]
+# outputs = ['outputs\\new_requirements.csv', "outputs\latency_paragraphs.csv", "outputs\latency_no_paragraphs.csv"]
 
-csv_to_xlsx(outputs, "outputs\output.xlsx", "latency")
+# csv_to_xlsx(outputs, "outputs\output.xlsx", "latency")
 
 
