@@ -5,6 +5,7 @@ from tkinter import ttk, filedialog
 import filter_docs
 import generate_req
 import std_retriever
+import csv2xlsx
 
 # File path for the configuration file
 CONFIG_FILE = "config.json"
@@ -75,6 +76,7 @@ def run():
         status_label.config(text="Generating requirements...")
         root.update()
         generate_req.generate_req(config)
+        csv2xlsx.csv_to_xlsx(config)
         status_label.config(text="Done! Check the output folder for the results.")
     except Exception as e:
         print(e)
