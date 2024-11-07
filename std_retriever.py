@@ -77,6 +77,7 @@ class FTPClient:
 # local_path is path to the destination folder you want to download standards to
 def get_standards(ftp_client: FTPClient, std_list: str, local_path: str):
     os.makedirs(local_path, exist_ok=True) # creating a directory if it does not exist.
+    clear_folder(local_path)
     #open the json file
     with open(std_list, 'r') as series_list:
         series_data = json.load(series_list) # load the data from json file 
@@ -121,6 +122,7 @@ def get_standards(ftp_client: FTPClient, std_list: str, local_path: str):
 
 def unzip_all_in_folder(folder_path, extract_to): # This function is created by Chat-GPT
     os.makedirs(extract_to, exist_ok=True)
+    clear_folder(extract_to)
     # List all files in the folder
     for file_name in os.listdir(folder_path):
         # Construct full file path
@@ -141,7 +143,7 @@ def unzip_all_in_folder(folder_path, extract_to): # This function is created by 
 
 def search_title(folder_path, xlsx_file, phrase:str="", series_no:str=""): # folder_path: where json files will be stored, xlsx_file: excel file thatt holds the spec_no s and titles.
     os.makedirs(folder_path, exist_ok=True)
-    
+    clear_folder(folder_path)
     # If a phrase is provided, create a regular expression based on it; otherwise, match all titles
     pattern = re.compile(phrase, re.IGNORECASE) if phrase else None
 
@@ -201,6 +203,28 @@ def search_title(folder_path, xlsx_file, phrase:str="", series_no:str=""): # fol
     # return the name of created json files that specific phrase was found in their title
     return file_names 
         
+def clear_folder(folder_path): # This function is created by Chat-GPT
+    # Check if the folder exists
+    if os.path.exists(folder_path):
+        # Check if the folder is empty
+        if not os.listdir(folder_path):  # `os.listdir` returns an empty list if the folder is empty
+            print("Folder is empty.")
+        else:
+            # Folder is not empty; delete its contents
+            for filename in os.listdir(folder_path):
+                file_path = os.path.join(folder_path, filename)
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)  # Remove the file
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)  # Remove the directory
+                    print(f"Deleted: {file_path}")
+                except Exception as e:
+                    print(f"Failed to delete {file_path}. Reason: {e}")
+            print("Folder contents cleared.")
+    else:
+        print("Folder does not exist.")
+
 
 #################### script #########################
 
