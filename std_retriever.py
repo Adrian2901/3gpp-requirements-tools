@@ -11,20 +11,14 @@ import zipfile
 import pandas as pd 
 import shutil
 
-
-with open('config.json', 'r') as file:
-    config = json.load(file)
-
 ##############################################
 # Configuration variables
-host = config["ftp_host_address"]
-ftp_directory_path = config["ftp_directory_path"] 
-download_folder_path = config["download_folder_path"]
-unzipped_folder_path = config["unzipped_standards_folder_path"]
-excel_spec_file = config["excel_spec_file"]
+host = "www.3gpp.org"
+ftp_directory_path = "Specs/archive"
+download_folder_path = "zipped_standards"
+excel_spec_file = "Specification_list.xlsx"
 standard_specs_folder_path = "standard_specs_folder"
-phrase = config["phrase"]
-series_no = config["series_no"]
+
 
 ##############################################
 #
@@ -234,7 +228,11 @@ def clear_folder(folder_path): # This function is created by Chat-GPT
 
 #################### script #########################
 
-def main():
+def download(config):
+    unzipped_folder_path = config["download_folder_path"] 
+    phrase = config["phrase"]
+    series_no = config["series_no"]
+
     try:
         # create the connection to FTP server and change to the wanted directory
         ftp_client = FTPClient(host)
@@ -256,4 +254,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    with open('config.json', 'r') as file:
+        config = json.load(file)
+    download(config)
