@@ -16,17 +16,18 @@ def ask_llm(paragraph, word):
     :return: The response from the LLM model; a generated requirement
     '''
 
-    url = f'http://{llm_ip}/api/generate'
 
-    # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (data and headers)
+
+    # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (url, data, and headers)
     prompt_text = prompts['generate_requirement'].replace("{parameter}", word) + paragraph
+    url = f'http://{llm_ip}/api/generate'
     data = {
         "model": llm,
         "prompt": prompt_text,
         "stream": False
         }
     headers = {'Content-Type': 'application/json'}
-    
+
     # Send the request to the LLM model, extract the response from the JSON data and return it
     response = requests.post(url, data=json.dumps(data), headers=headers)
     json_data = json.loads(response.text)

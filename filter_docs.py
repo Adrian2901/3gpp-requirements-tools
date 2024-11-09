@@ -21,10 +21,11 @@ def ask_llm(paragraph, filter_word):
     :return: The response from the LLM model; either "NO" or "POSSIBLE"
     '''
 
-    url = f'http://{llm_ip}/api/generate'
+    
 
-    # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (data and headers)
+    # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (url, data, and headers)
     prompt_text = prompts['verify_context'].replace("{parameter}", filter_word) + paragraph
+    url = f'http://{llm_ip}/api/generate'
     data = {
         "model": llm,
         "prompt": prompt_text,
