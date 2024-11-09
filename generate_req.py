@@ -8,14 +8,26 @@ global llm
 llm = "llama3.1"
 
 
-def ask_llm(paragraph):
+def ask_llm(paragraph, word):
+    '''
+    Ask the LLM model to generate a requirement.
+    :param paragraph: The paragraph to be made into a requirement
+    :param word: The word to be used to provide context as part of the prompt
+    :return: The response from the LLM model; a generated requirement
+    '''
+
     url = f'http://{llm_ip}/api/generate'
+
+    # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (data and headers)
+    prompt_text = prompts['generate_requirement'].replace("{parameter}", word) + paragraph
     data = {
         "model": llm,
-        "prompt": prompts['generate_requirement'] + paragraph,
+        "prompt": prompt_text,
         "stream": False
         }
     headers = {'Content-Type': 'application/json'}
+    
+    # Send the request to the LLM model, extract the response from the JSON data and return it
     response = requests.post(url, data=json.dumps(data), headers=headers)
     json_data = json.loads(response.text)
     return json_data['response']
@@ -23,6 +35,7 @@ def ask_llm(paragraph):
 def generate_req(config):
     llm_ip = config['llm_address']
     llm = config['model_name']
+    word = config['keywords'][0]
     # Read the Paragraph column
     df = pd.read_csv("outputs/latency_paragraphs.csv" , sep=';')
     column = df['Paragraph']
@@ -30,7 +43,11 @@ def generate_req(config):
     print('Generating requirements...')
     for i in range(len(column)):
         paragraph = column[i]
-        response = ask_llm(paragraph)
+        try:
+            response = ask_llm(paragraph, word)
+        except Exception as e:
+            response = 'Error when generating requirement'
+            print(e)
         df.at[i, 'Requirement'] = response
     # Save the new dataframe to a new csv file
     df.to_csv('outputs/new_requirements.csv', sep=';', index=False)

@@ -13,14 +13,26 @@ llm_ip = "localhost:11435"
 global llm
 llm = "llama3.1"
 
-def ask_llm(paragraph):
+def ask_llm(paragraph, filter_word):
+    '''
+    Ask the LLM model to determine if the paragraph contains enough information to generate a requirement.
+    :param paragraph: The paragraph to be analyzed
+    :param filter_word: The word to be used as a filter
+    :return: The response from the LLM model; either "NO" or "POSSIBLE"
+    '''
+
     url = f'http://{llm_ip}/api/generate'
+
+    # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (data and headers)
+    prompt_text = prompts['verify_context'].replace("{parameter}", filter_word) + paragraph
     data = {
         "model": llm,
-        "prompt": prompts['verify_context'] + paragraph,
+        "prompt": prompt_text,
         "stream": False
         }
     headers = {'Content-Type': 'application/json'}
+    
+    # Send the request to the LLM model, extract the response from the JSON data and return it
     response = requests.post(url, data=json.dumps(data), headers=headers)
     json_data = json.loads(response.text)
     return json_data['response']
@@ -73,7 +85,7 @@ def process_docx_files_in_folder(folder_path, search_word, output_csv, config):
                 found_paragraphs, found_requirements = extract_paragraphs_with_keywords(doc, search_word, filename, config)
                 requirements.extend(found_requirements)
                 for filename, section, paragraph in found_paragraphs:
-                    llm_response = ask_llm(paragraph)
+                    llm_response = ask_llm(paragraph, search_word[0])
                     if llm_response == "NO":
                         csvwriter_no.writerow([filename[:-5], section, paragraph, llm_response])
                     if llm_response == "POSSIBLE":
