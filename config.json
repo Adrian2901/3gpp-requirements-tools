@@ -1,5 +1,5 @@
 {
-    "llm_address": "localhost:11435",
+  "llm_address": "localhost:11435", 
     "folder_path": "standards/23_standards",
     "latency_paragraphs": "outputs/latency_paragraphs.csv",
     "keywords": ["latency", "latencies"],
@@ -12,5 +12,11 @@
     "unzipped_standards_folder_path": "unzipped_standards",
     "excel_spec_file": "Specification_list.xlsx",
     "phrase": "",
-    "series_no": ""
+    "series_no": "", 
+    "units": {
+      "ms": "\\b\\d+\\s*ms\\b\\.?", 
+      "percent": "\\b\\d+\\s*%\\b\\.?", 
+      "kbps": "\\b\\d+\\s*kbps\\b\\.?"
+    }, 
+    "checked_units": ["ms"]
 }
