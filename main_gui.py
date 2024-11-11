@@ -131,11 +131,14 @@ run_btn.grid(row=5,column=1)
 status_label.grid(row=6,column=1)
 
 def download():
-    status2_label.config(text="Downloading the standards...")
-    root.update()
-    config = save_config()
-    std_retriever.download(config)
-    status2_label.config(text="Done! Check the output folder for the results.")
+    try:
+        status2_label.config(text="Downloading the standards...")
+        root.update()
+        config = save_config()
+        std_retriever.download(config)
+        status2_label.config(text="Done! Check the output folder for the results.")
+    except Exception as e:
+        status2_label.config(text=f"Could not download standards. error: {e}")
 
 def select_download_dir():
     download_dir_var = filedialog.askdirectory()
