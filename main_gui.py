@@ -37,9 +37,14 @@ tab1 = ttk.Frame(tabControl)
 tabControl.add(tab1, text='Generate Requirements')
 tab2 = ttk.Frame(tabControl)
 tabControl.add(tab2, text='Download Standards')
+tab3 = ttk.Frame(tabControl)
+tabControl.add(tab3, text='Settings')
 tabControl.pack(expand=1, fill="both")
 
 def save_config():
+
+    checked_units = [unit for unit, var in unit_vars.items() if var.get()]
+
     config = {
         'llm_address': ip_var.get(),
         'folder_path': path_var.get(),
@@ -54,7 +59,13 @@ def save_config():
         'verbose': False,
         'download_folder_path': download_dir_var.get(),
         'phrase': search_keyword_var.get(),
-        'series_no': series_var.get()
+        'series_no': series_var.get(),
+        'units': {
+            "ms": "\\b\\d+\\s*ms\\b\\.?",
+            "percent": "\\b\\d+\\s*%\\b\\.?",
+            "kbps": "\\b\\d+\\s*kbps\\b\\.?"
+        },
+        'checked_units': checked_units
     }
     with open(CONFIG_FILE, 'w') as f:
         json.dump(config, f)
@@ -158,6 +169,15 @@ download_dir_btn=tk.Button(tab2,text = '...', command = select_download_dir, wid
 
 download_btn=tk.Button(tab2, text = 'Download', command = download, width=30)
 status2_label = tk.Label(tab2, text = '', font = ('arial',10,'normal'))
+
+unit_vars = {}  # Dictionary to store BooleanVar for each unit
+
+# Create a checkbox for each unit type in the config
+for unit_name in config['units']:
+    unit_var = tk.BooleanVar(value=unit_name in config.get('checked_units', []))
+    unit_vars[unit_name] = unit_var
+    unit_checkbox = tk.Checkbutton(tab3, text=unit_name, variable=unit_var)
+    unit_checkbox.grid(sticky='w')
 
 series_label.grid(row=0,column=0, padx=5)
 series_entry.grid(row=0,column=1, pady=10)
