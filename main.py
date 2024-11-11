@@ -6,6 +6,7 @@ import filter_docs
 import generate_req
 import std_retriever
 import csv2xlsx
+import threading
 
 # File path for the configuration file
 CONFIG_FILE = "config.json"
@@ -68,6 +69,7 @@ def save_config():
     return config
 
 def run():
+    run_btn.config(state=tk.DISABLED)
     status_label.config(text="Filtering the documents...")
     root.update()
     config = save_config()
@@ -78,6 +80,7 @@ def run():
         generate_req.generate_req(config)
         csv2xlsx.csv_to_xlsx(config)
         status_label.config(text="Done! Check the output folder for the results.")
+        run_btn.config(state=tk.NORMAL)
     except Exception as e:
         print(e)
         status_label.config(text=f"An error occurred! Please try again.")
@@ -118,7 +121,7 @@ model_label = tk.Label(tab1, text = 'Language Model', font = ('arial',10,'normal
 model_entry=ttk.Combobox(tab1, values=["llama3.1", "llama3.1:70b", "llama3.1:405b"], width=79)
 model_entry.set(model_var)
 
-run_btn=tk.Button(tab1,text = 'Run', command = run, width=30)
+run_btn=tk.Button(tab1,text = 'Run', command = threading.Thread(target=run).start, width=30)
 
 status_label = tk.Label(tab1, text = '', font = ('arial',10,'normal'))
 
@@ -140,10 +143,12 @@ status_label.grid(row=6,column=1)
 
 def download():
     status2_label.config(text="Downloading the standards...")
+    download_btn.config(state=tk.DISABLED)
     root.update()
     config = save_config()
     std_retriever.download(config)
     status2_label.config(text="Done! Check the output folder for the results.")
+    download_btn.config(state=tk.NORMAL)
 
 def select_download_dir():
     download_dir_var = filedialog.askdirectory()
@@ -164,7 +169,7 @@ download_dir_label = tk.Label(tab2, text = 'Output folder', font=('arial',10))
 download_dir_entry = tk.Entry(tab2, textvariable = download_dir_var, font=('arial',10,'normal'), width=70)
 download_dir_btn=tk.Button(tab2,text = '...', command = select_download_dir, width=10)
 
-download_btn=tk.Button(tab2, text = 'Download', command = download, width=30)
+download_btn=tk.Button(tab2, text = 'Download', command = threading.Thread(target=download).start, width=30)
 status2_label = tk.Label(tab2, text = '', font = ('arial',10,'normal'))
 
 unit_vars = {}  # Dictionary to store BooleanVar for each unit
