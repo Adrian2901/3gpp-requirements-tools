@@ -75,7 +75,7 @@ class FTPClient:
 
 # std_list is path to the JSON file that contains the name of the files alongside their version
 # local_path is path to the destination folder you want to download standards to
-def get_standards(ftp_client: FTPClient, std_list: str, local_path: str):
+def get_standards(ftp_client: FTPClient, std_list: str, local_path: str, update):
     os.makedirs(local_path, exist_ok=True) # creating a directory if it does not exist.
     clear_folder(local_path)
     #open the json file
@@ -93,6 +93,7 @@ def get_standards(ftp_client: FTPClient, std_list: str, local_path: str):
         # Terminate the process if given series was not found
         if(not series_found):
             print(f'{series_data["series_no"]} was not found.')
+            update(f'{series_data["series_no"]} was not found.')
             return
         
         # search for the given files in the series folder
@@ -112,6 +113,7 @@ def get_standards(ftp_client: FTPClient, std_list: str, local_path: str):
                     else:
                         filename_ = series_data['series_no'] + index['spec_no'] + '-' + index['version'] + ".zip"
                         ftp_client.download(filename_, local_path)
+                    update("Downloading " + filename_)
                     
                     ftp_client.change_directory('..') # going back one directory up after being finished with the current file 
         
@@ -228,7 +230,8 @@ def clear_folder(folder_path): # This function is created by Chat-GPT
 
 #################### script #########################
 
-def download(config):
+def download(config, button_handler, update):
+    button_handler.config(state="disabled")
     unzipped_folder_path = config["download_folder_path"] 
     phrase = config["phrase"]
     series_no = config["series_no"]
@@ -242,15 +245,22 @@ def download(config):
         standards = search_title(standard_specs_folder_path, excel_spec_file, phrase, series_no)
 
         for standard in standards:
-            get_standards(ftp_client, os.path.join(standard_specs_folder_path, standard) , download_folder_path)
+            get_standards(ftp_client, os.path.join(standard_specs_folder_path, standard) , download_folder_path, update)
 
         # unzip the downloaded standards 
+        update("Unzipping downloaded standards...")
         unzip_all_in_folder(download_folder_path, unzipped_folder_path)
 
         # removing the standards_specs folder
+        update("Cleaning up...")
         shutil.rmtree(standard_specs_folder_path)
+
+        update("Done! Check the output folder for the results.")
+    except Exception as e:
+        update(f"An error occured: {e}. Please try again.")
     finally:
         ftp_client.close_connection()
+        button_handler.config(state="normal")
 
 
 if __name__ == "__main__":

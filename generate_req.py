@@ -20,21 +20,21 @@ def ask_llm(paragraph):
     json_data = json.loads(response.text)
     return json_data['response']
 
-def generate_req(config):
+def generate_req(config, update):
     llm_ip = config['llm_address']
     llm = config['model_name']
     # Read the Paragraph column
     df = pd.read_csv("outputs/latency_paragraphs.csv" , sep=';')
     column = df['Paragraph']
     # ask llm for each row in the column
-    print('Generating requirements...')
     for i in range(len(column)):
+        update('Generating requirements...', i/len(column))
         paragraph = column[i]
         response = ask_llm(paragraph)
         df.at[i, 'Requirement'] = response
     # Save the new dataframe to a new csv file
     df.to_csv('outputs/new_requirements.csv', sep=';', index=False)
-    print('Finished generating requirements!')
+    update('Finished generating requirements!')
 
 
 with open('prompts.json', 'r') as f:

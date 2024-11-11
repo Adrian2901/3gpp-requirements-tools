@@ -68,22 +68,31 @@ def save_config():
         json.dump(config, f)
     return config
 
+def update_status(message, progress=None):
+    status_label.config(text=message)
+    if progress is not None:
+        progressbar.grid(row=7,column=1)
+        progressbar.config(value=progress*100)
+    else:
+        progressbar.grid_forget()
+    root.update()
+
 def run():
     run_btn.config(state=tk.DISABLED)
-    status_label.config(text="Filtering the documents...")
-    root.update()
+    update_status("Starting the filtering...")
     config = save_config()
     try:
-        filter_docs.execute_filtering(config)
-        status_label.config(text="Generating requirements...")
-        root.update()
-        generate_req.generate_req(config)
-        csv2xlsx.csv_to_xlsx(config)
-        status_label.config(text="Done! Check the output folder for the results.")
-        run_btn.config(state=tk.NORMAL)
+        def run_tasks():
+            filter_docs.execute_filtering(config, update_status)
+            generate_req.generate_req(config, update_status)
+            csv2xlsx.csv_to_xlsx(config, update_status)
+            run_btn.config(state=tk.NORMAL)
+        
+        task_thread = threading.Thread(target=run_tasks)
+        task_thread.start()
     except Exception as e:
         print(e)
-        status_label.config(text=f"An error occurred! Please try again.")
+        update_status("An error occurred! Please try again.")
 
 def on_model_select(event):
     model_var = combo_box.get()
@@ -121,9 +130,10 @@ model_label = tk.Label(tab1, text = 'Language Model', font = ('arial',10,'normal
 model_entry=ttk.Combobox(tab1, values=["llama3.1", "llama3.1:70b", "llama3.1:405b"], width=79)
 model_entry.set(model_var)
 
-run_btn=tk.Button(tab1,text = 'Run', command = threading.Thread(target=run).start, width=30)
+run_btn=tk.Button(tab1,text = 'Run', command = run, width=30)
 
 status_label = tk.Label(tab1, text = '', font = ('arial',10,'normal'))
+progressbar = ttk.Progressbar(tab1, length=500)
 
 ip_label.grid(row=0,column=0, padx=5)
 ip_entry.grid(row=0,column=1, pady=10)
@@ -141,15 +151,16 @@ keyword_entry.grid(row=4,column=1, pady=10)
 run_btn.grid(row=5,column=1)
 status_label.grid(row=6,column=1)
 
+def update_download_status(message):
+    status2_label.config(text=message)
+    root.update()
+
 def download():
-    status2_label.config(text="Downloading the standards...")
-    download_btn.config(state=tk.DISABLED)
+    status2_label.config(text="Processing the standards...")
     root.update()
     config = save_config()
-    std_retriever.download(config)
-    status2_label.config(text="Done! Check the output folder for the results.")
-    download_btn.config(state=tk.NORMAL)
-
+    threading.Thread(target=std_retriever.download, args=(config, download_btn, update_download_status)).start()
+    
 def select_download_dir():
     download_dir_var = filedialog.askdirectory()
     download_dir_entry.delete(0, tk.END)
@@ -169,7 +180,7 @@ download_dir_label = tk.Label(tab2, text = 'Output folder', font=('arial',10))
 download_dir_entry = tk.Entry(tab2, textvariable = download_dir_var, font=('arial',10,'normal'), width=70)
 download_dir_btn=tk.Button(tab2,text = '...', command = select_download_dir, width=10)
 
-download_btn=tk.Button(tab2, text = 'Download', command = threading.Thread(target=download).start, width=30)
+download_btn=tk.Button(tab2, text = 'Download', command = download, width=30)
 status2_label = tk.Label(tab2, text = '', font = ('arial',10,'normal'))
 
 unit_vars = {}  # Dictionary to store BooleanVar for each unit

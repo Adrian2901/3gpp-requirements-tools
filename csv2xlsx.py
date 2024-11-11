@@ -33,11 +33,11 @@ def highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_form
             # sheet.set_row(row_idx, None, wrap_format)  # Enable text wrapping for the entire row
 
 # Defautl input_csv is a list of the three csv files containing the default names we used in the project
-def csv_to_xlsx(config):
+def csv_to_xlsx(config, update):
     keyword = config['keywords'][0] # keyword to highlight TODO: iterate thru the list of keywords
 
     input_csv=["outputs/new_requirements.csv", "outputs\latency_paragraphs.csv", "outputs\latency_no_paragraphs.csv"] #input csv files(not specified in config for now)
-    print("Processing CSV to XLSX...")
+    update("Processing CSV to XLSX...")
 
     print(input_csv[0])
     print(input_csv[1])
@@ -125,8 +125,7 @@ def csv_to_xlsx(config):
 
     #close the workbook
     workbook.close()
-    print("Conversion complete! Output saved to outputs/output.xlsx.")
-   
+    update("Done! Check the output folder for the results.")
 
 
 # Example usage
