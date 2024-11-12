@@ -8,16 +8,29 @@ import base64
 from PIL import Image
 from io import BytesIO, StringIO
 
-def ask_llm(image_path):
+def ask_llm(image_path, word):
+    '''
+    Ask the LLM model to give context to a sequence diagram.
+    :param image_path: The path to the image to be analyzed
+    :param word: The word to be used to provide context as part of the prompt
+    :return: The response from the LLM model; a generated requirement
+    '''
+    
+    # Encode the image to base64 so that it can be sent to the LLM model
     encoded_image = base64.b64encode(open(image_path, "rb").read()).decode('utf-8')
+
+    # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (url, data, and headers)
+    prompt_text = prompts['generate_image_context'].replace("{parameter}", word)
     url = f'http://localhost:11435/api/generate'
     data = {
         "model": "minicpm-v",
-        "prompt": "Check whether the image provided is a sequence diagram. If it is, provide a detailed description of the diagram, eliciting as much information as possible. Take into consideration solid and dotted lines whereever applicable.",
+        "prompt": prompt_text,
         "images": [encoded_image],
         "stream": False
         }
     headers = {'Content-Type': 'application/json'}
+
+    # Send the request to the LLM model, extract the response from the JSON data and return it
     response = requests.post(url, data=json.dumps(data), headers=headers)
     json_data = json.loads(response.text)
     return json_data['response']
@@ -42,7 +55,7 @@ def extract_images_from_docx(docx_path, output_folder):
 
                 output_doc.add_heading(current_section[4:-4], level=1)
                 output_doc.add_picture(new_path, width=Inches(6))
-                output_doc.add_paragraph(ask_llm(new_path))
+                output_doc.add_paragraph(ask_llm(new_path, word="latency"))
                 output_doc.add_page_break()
             except Exception as e:
                 print(f"Error adding image {img_name} to the document: {e}")
@@ -84,8 +97,11 @@ def main():
     # encode_images_to_base64(output_folder)
 
     print("Processing images")
-    extract_images_from_docx("test_files/23502-i20_l.docx", output_folder)
-    
+    extract_images_from_docx("test_files/diagramstest.docx", output_folder)
+
+with open('prompts.json', 'r') as f:
+    prompts = json.load(f)
+
 
 if __name__ == "__main__":
     main()
