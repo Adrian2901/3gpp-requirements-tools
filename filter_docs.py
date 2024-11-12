@@ -55,7 +55,7 @@ def extract_paragraphs_with_keywords(doc, keywords, filename, config):
     return paragraphs, requirements
 
 
-def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv, config):
+def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv, config, update):
     requirements = []
  
     with open(possible_csv, 'w', newline='', encoding='utf-8') as csvfile_possible, \
@@ -69,12 +69,14 @@ def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv,
         for filename in os.listdir(folder_path):
             if filename.endswith('.doc'):
                 convert(os.path.join(folder_path, filename))
+                update("Converting " + filename + " to .docx")
                 os.remove(os.path.join(folder_path, filename))
 
+        i = 0
         for filename in os.listdir(folder_path):
             if filename.endswith('.docx'):
+                update("Processing " + filename, i/len(os.listdir(folder_path)))
                 file_path = os.path.join(folder_path, filename)
-                print(f"Processing file: {file_path}")
                 doc = Document(file_path)
                 found_paragraphs, found_requirements = extract_paragraphs_with_keywords(doc, search_word, filename, config)
                 requirements.extend(found_requirements)
@@ -83,10 +85,12 @@ def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv,
                     if llm_response == "NO":
                         csvwriter_no.writerow([filename[:-5], section, paragraph, llm_response])
                     if llm_response == "POSSIBLE":
-                        csvwriter_possible.writerow([filename[:-5], section, paragraph, llm_response])                       
-    with open(config["output_xlsx"], 'w', newline='', encoding='utf-8') as csvfile:
+                        csvwriter_possible.writerow([filename[:-5], section, paragraph, llm_response])  
+            i += 1                     
+    with open(config["output_folder_path"] + "/output.xlsx", 'w', newline='', encoding='utf-8') as csvfile:
+        update("Saving output to a file...")
         csvwriter = csv.writer(csvfile, delimiter=';')
-        csvwriter.writerow(['File', 'Chapter', 'Requirement'])
+        # csvwriter.writerow(['File', 'Chapter', 'Requirement'])
         for filename, section, paragraph in requirements:
             csvwriter.writerow([filename[:-5], section, paragraph])
 
@@ -94,14 +98,14 @@ with open('prompts.json', 'r') as f:
     prompts = json.load(f)
 
 
-def execute_filtering(config):
+def execute_filtering(config, update):
     llm_ip = config['llm_address']
     llm = config['model_name']
     folder_path = config['folder_path']
     keywords = config['keywords']
-    possible_csv = config['latency_possible']
-    no_csv = config['latency_no']
-    process_docx_files_in_folder(folder_path, keywords, possible_csv, no_csv, config)
+    possible_csv = config["output_folder_path"] + "/possible_paragraphs.csv"
+    no_csv = config["output_folder_path"] + "/no_paragraphs.csv"
+    process_docx_files_in_folder(folder_path, keywords, possible_csv, no_csv, config, update)
 
 ########################################################################
 # main function (executed when running this file)
