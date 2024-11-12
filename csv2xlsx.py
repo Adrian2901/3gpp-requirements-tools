@@ -35,10 +35,10 @@ def highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_form
 # Defautl input_csv is a list of the three csv files containing the default names we used in the project
 def csv_to_xlsx(config, update):
     keyword = config['keywords'][0] # keyword to highlight TODO: iterate thru the list of keywords
-    latency_possible = config['latency_possible']
-    latency_no = config['latency_no']
-    new_requirements = config['new_requirements']
-    output_xlsx = config['output_xlsx']  #output xlsx file
+    latency_possible = config["output_folder_path"] + "/possible_paragraphs.csv"
+    latency_no = config["output_folder_path"] + "/no_paragraphs.csv"
+    new_requirements = config["output_folder_path"] + "/new_requirements.csv"
+    output_xlsx = config["output_folder_path"] + "/output.xlsx"  #output xlsx file
     
     update("Processing CSV to XLSX...")
 

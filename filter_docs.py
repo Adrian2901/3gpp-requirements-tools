@@ -87,10 +87,10 @@ def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv,
                     if llm_response == "POSSIBLE":
                         csvwriter_possible.writerow([filename[:-5], section, paragraph, llm_response])  
             i += 1                     
-    with open(config["output_xlsx"], 'w', newline='', encoding='utf-8') as csvfile:
+    with open(config["output_folder_path"] + "/output.xlsx", 'w', newline='', encoding='utf-8') as csvfile:
         update("Saving output to a file...")
         csvwriter = csv.writer(csvfile, delimiter=';')
-        csvwriter.writerow(['File', 'Chapter', 'Requirement'])
+        # csvwriter.writerow(['File', 'Chapter', 'Requirement'])
         for filename, section, paragraph in requirements:
             csvwriter.writerow([filename[:-5], section, paragraph])
 
@@ -103,8 +103,8 @@ def execute_filtering(config, update):
     llm = config['model_name']
     folder_path = config['folder_path']
     keywords = config['keywords']
-    possible_csv = config['latency_possible']
-    no_csv = config['latency_no']
+    possible_csv = config["output_folder_path"] + "/possible_paragraphs.csv"
+    no_csv = config["output_folder_path"] + "/no_paragraphs.csv"
     process_docx_files_in_folder(folder_path, keywords, possible_csv, no_csv, config, update)
 
 ########################################################################

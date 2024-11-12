@@ -23,8 +23,8 @@ def ask_llm(paragraph):
 def generate_req(config, update):
     llm_ip = config['llm_address']
     llm = config['model_name']
-    latency_paragraphs = config['latency_possible']
-    output_csv = config['new_requirements']
+    latency_paragraphs = config["output_folder_path"] + "/possible_paragraphs.csv"
+    output_csv = config["output_folder_path"] + "/new_requirements.csv"
 
     # Read the Paragraph column
     df = pd.read_csv(latency_paragraphs , sep=';')
