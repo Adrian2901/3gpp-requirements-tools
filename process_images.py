@@ -20,7 +20,7 @@ def ask_llm(image_path, word):
     encoded_image = base64.b64encode(open(image_path, "rb").read()).decode('utf-8')
 
     # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (url, data, and headers)
-    prompt_text = prompts['generate_image_context'].replace("{parameter}", word) + encoded_image
+    prompt_text = prompts['generate_image_context'].replace("{parameter}", word)
     url = f'http://localhost:11435/api/generate'
     data = {
         "model": "minicpm-v",
@@ -97,7 +97,7 @@ def main():
     # encode_images_to_base64(output_folder)
 
     print("Processing images")
-    extract_images_from_docx("test_files/23502-i20_l.docx", output_folder)
+    extract_images_from_docx("test_files/diagramstest.docx", output_folder)
 
 with open('prompts.json', 'r') as f:
     prompts = json.load(f)
