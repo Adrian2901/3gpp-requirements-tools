@@ -26,9 +26,9 @@ root.title(config.get("title", "Generate Requirements"))
 
 ip_var=tk.StringVar(value="localhost:11435")
 path_var=tk.StringVar(value=config['folder_path'])
-if "latency_paragraphs.csv" in config['latency_paragraphs']:
-    config['latency_paragraphs'] = config['latency_paragraphs'].replace("/latency_paragraphs.csv", "")
-output_var=tk.StringVar(value=config['latency_paragraphs'])
+# if "latency_possible.csv" in config['latency_possible']:
+#     config['latency_possible'] = config['latency_possible'].replace("/latency_possible.csv", "")
+output_var=tk.StringVar(value=config['output_folder_path'])
 keyword_var=tk.StringVar(value=' '.join(config['keywords']).replace(" ", ","))
 model_var=config['model_name']
 
@@ -48,8 +48,12 @@ def save_config():
     config = {
         'llm_address': ip_var.get(),
         'folder_path': path_var.get(),
-        'latency_paragraphs': output_var.get() + "/latency_paragraphs.csv",
+        'latency_possible': output_var.get() + "/latency_possible.csv",
+        'latency_no': output_var.get() + "/latency_no.csv",
+        'new_requirements': output_var.get() + "/new_requirements.csv",
+        'output_xlsx': output_var.get() + "/output.xlsx",
         'keywords': keyword_var.get().split(","),
+        'output_folder_path': output_var.get(),
         'ignored_sections': ["References", "Appendix", "Definitions", "Abbreviations"],
         'model_name': model_var,
         'verbose': False,
@@ -79,8 +83,7 @@ def run():
         csv2xlsx.csv_to_xlsx(config)
         status_label.config(text="Done! Check the output folder for the results.")
     except Exception as e:
-        print(e)
-        status_label.config(text=f"An error occurred! Please try again.")
+        status_label.config(text=f"An error occurred! Please try again. {e}")
 
 def on_model_select(event):
     model_var = combo_box.get()
@@ -139,11 +142,14 @@ run_btn.grid(row=5,column=1)
 status_label.grid(row=6,column=1)
 
 def download():
-    status2_label.config(text="Downloading the standards...")
-    root.update()
-    config = save_config()
-    std_retriever.download(config)
-    status2_label.config(text="Done! Check the output folder for the results.")
+    try:
+        status2_label.config(text="Downloading the standards...")
+        root.update()
+        config = save_config()
+        std_retriever.download(config)
+        status2_label.config(text="Done! Check the output folder for the results.")
+    except Exception as e:
+        status2_label.config(text=f"Could not download standards. error: {e}")
 
 def select_download_dir():
     download_dir_var = filedialog.askdirectory()
