@@ -35,23 +35,23 @@ def highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_form
 # Defautl input_csv is a list of the three csv files containing the default names we used in the project
 def csv_to_xlsx(config, update):
     keyword = config['keywords'][0] # keyword to highlight TODO: iterate thru the list of keywords
-
-    input_csv=["outputs/new_requirements.csv", "outputs\latency_paragraphs.csv", "outputs\latency_no_paragraphs.csv"] #input csv files(not specified in config for now)
+    latency_possible = config['latency_possible']
+    latency_no = config['latency_no']
+    new_requirements = config['new_requirements']
+    output_xlsx = config['output_xlsx']  #output xlsx file
+    
     update("Processing CSV to XLSX...")
 
-    print(input_csv[0])
-    print(input_csv[1])
-    print(input_csv[2])
+    print(latency_possible)
+    print(latency_no)
+    print(new_requirements)
 
     # different input files
     # 1 and 2 have the same structure so different logic is only needed for 0
-    new_requirements = input_csv[0]; # "outputs\new_requirements.csv"
-    latency_paragraphs = input_csv[1]; # "outputs\latency_paragraphs.csv"
-    latency_no_paragraphs = input_csv[2]; # "outputs\latency_no_paragraphs.csv"
+
 
     # Create a new XLSX file
-    workbook = xlsxwriter.Workbook("outputs/output.xlsx") #hardcoded it, can be changed but it might not be necessary
-
+    workbook = xlsxwriter.Workbook(output_xlsx) 
     # Add a format for the header cells
     header_format = workbook.add_format({'bold': True, 'align': 'center', 'valign': 'vcenter', 'fg_color': '#D7E4BC'})
     # wrap text
@@ -61,7 +61,7 @@ def csv_to_xlsx(config, update):
 
     # Create a sheet for each input file
     workbook.add_worksheet("new_requirements")
-    workbook.add_worksheet("latency_paragraphs")
+    workbook.add_worksheet("latency_possible_paragraphs")
     workbook.add_worksheet("latency_no_paragraphs")
 
     # Create columns for the sheets
@@ -95,12 +95,12 @@ def csv_to_xlsx(config, update):
             highlight_keyword(requirement, keyword, sheet, row_idx, bold_format, wrap_format)
            
     
-    # read latency_paragraphs.csv and write to its sheet
-    with open(latency_paragraphs, 'r', encoding='utf-8') as f:
+    # read latency_possible.csv and write to its sheet
+    with open(latency_possible, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter=';')
         for row in reader:
             file, chapter, paragraph, llm_response = row
-            sheet = workbook.get_worksheet_by_name("latency_paragraphs")
+            sheet = workbook.get_worksheet_by_name("latency_possible_paragraphs")
             row_idx = sheet.dim_rowmax + 1 # Get the next available row (after the header)
             sheet.write(row_idx, 0, file)         # Column 0: File
             sheet.write(row_idx, 1, chapter)      # Column 1: Chapter
@@ -109,8 +109,8 @@ def csv_to_xlsx(config, update):
             # Check if the keyword is in the paragraph and highlight it
             highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_format)
 
-    # read latency_no_paragraphs.csv and write to its sheet
-    with open(latency_no_paragraphs, 'r', encoding='utf-8') as f:
+    # read latency_no.csv and write to its sheet
+    with open(latency_no, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter=';')
         for row in reader:
             file, chapter, paragraph, llm_response = row

@@ -7,6 +7,11 @@ import requests
 import json
 import re
 from doc2docx import convert
+import sys
+
+
+# Change the working directory to the directory of the executable
+os.chdir(sys._MEIPASS) if getattr(sys, 'frozen', False) else os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 global llm_ip
 llm_ip = "localhost:11435"
@@ -50,10 +55,11 @@ def extract_paragraphs_with_keywords(doc, keywords, filename, config):
     return paragraphs, requirements
 
 
-def process_docx_files_in_folder(folder_path, search_word, output_csv, config, update):
+def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv, config, update):
     requirements = []
-    with open("outputs/latency_paragraphs.csv", 'w', newline='', encoding='utf-8') as csvfile_possible, \
-         open("outputs/latency_no_paragraphs.csv", 'w', newline='', encoding='utf-8') as csvfile_no:
+ 
+    with open(possible_csv, 'w', newline='', encoding='utf-8') as csvfile_possible, \
+         open(no_csv, 'w', newline='', encoding='utf-8') as csvfile_no:
         csvwriter_possible = csv.writer(csvfile_possible, delimiter=';')
         csvwriter_no = csv.writer(csvfile_no, delimiter=';')
 
@@ -81,7 +87,7 @@ def process_docx_files_in_folder(folder_path, search_word, output_csv, config, u
                     if llm_response == "POSSIBLE":
                         csvwriter_possible.writerow([filename[:-5], section, paragraph, llm_response])  
             i += 1                     
-    with open("outputs/requirements.csv", 'w', newline='', encoding='utf-8') as csvfile:
+    with open(config["output_xlsx"], 'w', newline='', encoding='utf-8') as csvfile:
         update("Saving output to a file...")
         csvwriter = csv.writer(csvfile, delimiter=';')
         csvwriter.writerow(['File', 'Chapter', 'Requirement'])
@@ -97,8 +103,9 @@ def execute_filtering(config, update):
     llm = config['model_name']
     folder_path = config['folder_path']
     keywords = config['keywords']
-    output_csv = config['latency_paragraphs']
-    process_docx_files_in_folder(folder_path, keywords, output_csv, config, update)
+    possible_csv = config['latency_possible']
+    no_csv = config['latency_no']
+    process_docx_files_in_folder(folder_path, keywords, possible_csv, no_csv, config, update)
 
 ########################################################################
 # main function (executed when running this file)
