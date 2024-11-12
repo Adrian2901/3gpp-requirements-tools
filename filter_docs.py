@@ -7,6 +7,11 @@ import requests
 import json
 import re
 from doc2docx import convert
+import sys
+
+
+# Change the working directory to the directory of the executable
+os.chdir(sys._MEIPASS) if getattr(sys, 'frozen', False) else os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 global llm_ip
 llm_ip = "localhost:11435"
@@ -42,7 +47,8 @@ def extract_paragraphs_with_keywords(doc, keywords, filename, config):
     paragraphs = []
     requirements = []
     current_section = ""
-    unit_regex = re.compile(rf'\b\d+\s*{re.escape("ms")}\b\.?', re.IGNORECASE)
+    selected_units = config.get("checked_units", []) # Builds a list of compiled regexes for selected units
+    unit_regexes = [re.compile(config['units'][unit], re.IGNORECASE) for unit in selected_units if unit in config['units']]
     requirement_regex = re.compile(r'^\[\w+[\-\.\d]*\]', re.IGNORECASE)
     for paragraph in doc.paragraphs:
         if paragraph.style.name.startswith('Heading'):
@@ -53,20 +59,20 @@ def extract_paragraphs_with_keywords(doc, keywords, filename, config):
             # Check if the section is not ignored
             if current_section != "" and not any(ignored_section in current_section for ignored_section in config['ignored_sections']):
                 paragraphs.append((filename, current_section, paragraph.text))
-        # Check if the paragraph contains a ms unit
-        elif unit_regex.search(paragraph.text):
-            # Check if the paragraph is a requirement (follows the pattern [R-X...])
-            if requirement_regex.search(paragraph.text):
+        # Check if the paragraph matches any of the selected unit regexes
+        elif any(unit_regex.search(paragraph.text) for unit_regex in unit_regexes):
+            if requirement_regex.search(paragraph.text): # Check if the paragraph is a requirement (follows the pattern [R-X...])
                 requirements.append((filename, current_section, paragraph.text))
             else:
                 paragraphs.append((filename, current_section, paragraph.text))
     return paragraphs, requirements
 
 
-def process_docx_files_in_folder(folder_path, search_word, output_csv, config):
+def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv, config, update):
     requirements = []
-    with open("outputs/latency_paragraphs.csv", 'w', newline='', encoding='utf-8') as csvfile_possible, \
-         open("outputs/latency_no_paragraphs.csv", 'w', newline='', encoding='utf-8') as csvfile_no:
+ 
+    with open(possible_csv, 'w', newline='', encoding='utf-8') as csvfile_possible, \
+         open(no_csv, 'w', newline='', encoding='utf-8') as csvfile_no:
         csvwriter_possible = csv.writer(csvfile_possible, delimiter=';')
         csvwriter_no = csv.writer(csvfile_no, delimiter=';')
 
@@ -76,12 +82,14 @@ def process_docx_files_in_folder(folder_path, search_word, output_csv, config):
         for filename in os.listdir(folder_path):
             if filename.endswith('.doc'):
                 convert(os.path.join(folder_path, filename))
+                update("Converting " + filename + " to .docx")
                 os.remove(os.path.join(folder_path, filename))
 
+        i = 0
         for filename in os.listdir(folder_path):
             if filename.endswith('.docx'):
+                update("Processing " + filename, i/len(os.listdir(folder_path)))
                 file_path = os.path.join(folder_path, filename)
-                print(f"Processing file: {file_path}")
                 doc = Document(file_path)
                 found_paragraphs, found_requirements = extract_paragraphs_with_keywords(doc, search_word, filename, config)
                 requirements.extend(found_requirements)
@@ -90,10 +98,12 @@ def process_docx_files_in_folder(folder_path, search_word, output_csv, config):
                     if llm_response == "NO":
                         csvwriter_no.writerow([filename[:-5], section, paragraph, llm_response])
                     if llm_response == "POSSIBLE":
-                        csvwriter_possible.writerow([filename[:-5], section, paragraph, llm_response])                       
-    with open("outputs/requirements.csv", 'w', newline='', encoding='utf-8') as csvfile:
+                        csvwriter_possible.writerow([filename[:-5], section, paragraph, llm_response])  
+            i += 1                     
+    with open(config["output_folder_path"] + "/output.xlsx", 'w', newline='', encoding='utf-8') as csvfile:
+        update("Saving output to a file...")
         csvwriter = csv.writer(csvfile, delimiter=';')
-        csvwriter.writerow(['File', 'Chapter', 'Requirement'])
+        # csvwriter.writerow(['File', 'Chapter', 'Requirement'])
         for filename, section, paragraph in requirements:
             csvwriter.writerow([filename[:-5], section, paragraph])
 
@@ -101,13 +111,14 @@ with open('prompts.json', 'r') as f:
     prompts = json.load(f)
 
 
-def execute_filtering(config):
+def execute_filtering(config, update):
     llm_ip = config['llm_address']
     llm = config['model_name']
     folder_path = config['folder_path']
     keywords = config['keywords']
-    output_csv = config['latency_paragraphs']
-    process_docx_files_in_folder(folder_path, keywords, output_csv, config)
+    possible_csv = config["output_folder_path"] + "/possible_paragraphs.csv"
+    no_csv = config["output_folder_path"] + "/no_paragraphs.csv"
+    process_docx_files_in_folder(folder_path, keywords, possible_csv, no_csv, config, update)
 
 ########################################################################
 # main function (executed when running this file)
