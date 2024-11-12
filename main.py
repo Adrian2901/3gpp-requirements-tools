@@ -28,9 +28,9 @@ root.title(config.get("title", "Generate Requirements"))
 # Get the values from the config files
 ip_var=tk.StringVar(value="localhost:11435")
 path_var=tk.StringVar(value=config['folder_path'])
-if "latency_paragraphs.csv" in config['latency_paragraphs']:
+if "latency_paragraphs.csv" in config['latency_possible']:
     config['latency_paragraphs'] = config['latency_paragraphs'].replace("/latency_paragraphs.csv", "")
-output_var=tk.StringVar(value=config['latency_paragraphs'])
+output_var=tk.StringVar(value=config['latency_possible'])
 keyword_var=tk.StringVar(value=' '.join(config['keywords']).replace(" ", ","))
 model_var=config['model_name']
 
@@ -48,7 +48,10 @@ def save_config():
     config = {
         'llm_address': ip_var.get(),
         'folder_path': path_var.get(),
-        'latency_paragraphs': output_var.get() + "/latency_paragraphs.csv",
+        'latency_possible': output_var.get() + "/latency_possible.csv",
+        'latency_no': output_var.get() + "/latency_no.csv",
+        'new_requirements': output_var.get() + "/new_requirements.csv",
+        'output_xlsx': output_var.get() + "/output.xlsx",
         'keywords': keyword_var.get().split(","),
         'ignored_sections': ["References", "Appendix", "Definitions", "Abbreviations"],
         'model_name': model_var,
@@ -71,7 +74,7 @@ def save_config():
 def update_status(message, progress=None):
     status_label.config(text=message)
     if progress is not None:
-        progressbar.grid(row=7,column=1)
+        progressbar.grid(row=8,column=1)
         progressbar.config(value=progress*100)
     else:
         progressbar.grid_forget()
