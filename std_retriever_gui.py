@@ -12,8 +12,8 @@ class StdRetriever:
         self.series_var = tk.StringVar(value=config['series_no'])
         self.search_keyword_var = tk.StringVar(value=config['phrase'])
         self.download_dir_var = tk.StringVar(value=config['download_folder_path'])
-        self.tr_var = tk.BooleanVar(value=False)
-        self.ts_var = tk.BooleanVar(value=False)
+        self.tr_var = tk.BooleanVar(value=True)
+        self.ts_var = tk.BooleanVar(value=True)
 
         self.series_label = tk.Label(self.frame, text = 'Series number', font=('arial',10))
         self.series_entry = tk.Entry(self.frame, textvariable = self.series_var, font=('arial',10,'normal'), width=70)
@@ -62,7 +62,6 @@ class StdRetriever:
     # Callback function to update the download status
     def update_download_status(self, message):
         self.status_label.config(text=message)
-        root.update()
 
     # Function to start the download on button press
     def download(self):
@@ -76,6 +75,8 @@ class StdRetriever:
             checked.append("Technical Report (TR)")
         if self.ts_var.get():
             checked.append("Technical Specification (TS)")
+        if len(checked) == 0:
+            checked = ["Technical Report (TR)", "Technical Specification (TS)"]
         return checked
 
     # Directory selection dialog
