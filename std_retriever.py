@@ -147,9 +147,18 @@ def unzip_all_in_folder(folder_path, extract_to): # This function is created by 
             print(f'Skipping {file_name}, not a zip file.')
 
 
-def search_title(folder_path, xlsx_file, phrase:str="", series_no:str=""): # folder_path: where json files will be stored, xlsx_file: excel file thatt holds the spec_no s and titles.
+def search_title(folder_path, xlsx_file, config): # folder_path: where json files will be stored, xlsx_file: excel file thatt holds the spec_no s and titles.
     os.makedirs(folder_path, exist_ok=True)
     clear_folder(folder_path)
+
+    phrase = config["phrase"]
+    series_no = config["series_no"]
+    lookedup_publicitation = config["publication"]
+    lookedup_technology = config["technology"]
+    lookedup_status = config["status"]
+    lookedup_specification_number = config["specification_number"]
+    lookedup_type = config["type"]
+
     # If a phrase is provided, create a regular expression based on it; otherwise, match all titles
     pattern = re.compile(phrase, re.IGNORECASE) if phrase else None
 
@@ -158,15 +167,28 @@ def search_title(folder_path, xlsx_file, phrase:str="", series_no:str=""): # fol
     previous_series = ""
     data = {} # for creating json file for each series 
 
+    keyword_column_map = {
+    lookedup_publicitation: "Publication",
+    lookedup_status: "Status",
+    lookedup_technology: "Technology",
+    lookedup_specification_number: "Spec No",
+    lookedup_type: "Type"
+    }
+
+    def row_matches(row):
+        return all(keyword in str(row[column]) for keyword, column in keyword_column_map.items())
+
+    result = df[df.apply(row_matches, axis=1)]
+
     # going through each row of excel file 
-    for index, row in df.iterrows():
+    for index, row in result.iterrows():
         current_spec:str = row["Spec No"]
         title:str = row["Title"]
-        
+
         current_series = current_spec.split('.')[0]
 
         if (series_no and current_series != series_no): # If a series number is specified and it does not match the current series number we don't save the specifications
-            continue
+            continue        
 
         if(current_series != previous_series): # Then save data of previous series to a json file and reset the data
             if(previous_series): # since when we start at first there is no previous series
@@ -246,7 +268,7 @@ def download(config, button_handler, update):
         ftp_client.change_directory(ftp_directory_path)
 
         #* search by title if necessary
-        standards = search_title(standard_specs_folder_path, excel_spec_file, phrase, series_no)
+        standards = search_title(standard_specs_folder_path, excel_spec_file, config)
 
         for standard in standards:
             get_standards(ftp_client, os.path.join(standard_specs_folder_path, standard) , download_folder_path, update)
