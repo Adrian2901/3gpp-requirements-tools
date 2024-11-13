@@ -100,7 +100,11 @@ def get_standards(ftp_client: FTPClient, std_list: str, local_path: str, update)
         for entry in ftp_client.list_directory():
             for index in series_data['indexes']: 
                 if(series_data['series_no'] + "."+ index['spec_no'] in entry):
-                    ftp_client.change_directory(series_data['series_no'] + "." + index['spec_no']) # change directory to the current standard folder
+                    try:
+                        ftp_client.change_directory(series_data['series_no'] + "." + index['spec_no']) # change directory to the current standard folder
+                    except Exception as e:
+                        print(f"Error changing directory to {series_data['series_no'] + '.' + index['spec_no']}: {e}")
+                        continue
                     # check for the version that needs to be downloaded
                     if(index['version'] == 'latest'):
                         all_versions = ftp_client.list_directory()
