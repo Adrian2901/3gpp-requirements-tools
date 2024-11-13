@@ -77,7 +77,7 @@ class FTPClient:
 # local_path is path to the destination folder you want to download standards to
 def get_standards(ftp_client: FTPClient, std_list: str, local_path: str, update):
     os.makedirs(local_path, exist_ok=True) # creating a directory if it does not exist.
-    clear_folder(local_path)
+    #clear_folder(local_path)
     #open the json file
     with open(std_list, 'r') as series_list:
         series_data = json.load(series_list) # load the data from json file 
@@ -167,18 +167,28 @@ def search_title(folder_path, xlsx_file, config): # folder_path: where json file
     previous_series = ""
     data = {} # for creating json file for each series 
 
+    # Mapping of keywords to columns from the Excel file
     keyword_column_map = {
-    lookedup_publicitation: "Publication",
-    lookedup_status: "Status",
-    lookedup_technology: "Technology",
-    lookedup_specification_number: "Spec No",
-    lookedup_type: "Type"
+        "Publication": lookedup_publicitation,
+        "Status": lookedup_status,
+        "Technology": lookedup_technology,
+        "Spec No": lookedup_specification_number,
+        "Type": lookedup_type
     }
 
+    # Function to check if a row matches the keyword criteria
     def row_matches(row):
-        return all(keyword in str(row[column]) for keyword, column in keyword_column_map.items())
+        for column, keyword in keyword_column_map.items():
+            if isinstance(keyword, list):  # check if the keyword is a list
+                if not any(item in str(row[column]) for item in keyword): # check if any of the items in the list is in the column
+                    return False
+            elif keyword not in str(row[column]):  # if not in the list, check if the keyword is in the column
+                return False
+        return True # if all the criteria are met return True
 
+    # Apply the mapping function to the dataframe
     result = df[df.apply(row_matches, axis=1)]
+
 
     # going through each row of excel file 
     for index, row in result.iterrows():
