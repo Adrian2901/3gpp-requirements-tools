@@ -9,60 +9,62 @@ class StdRetriever:
     def __init__(self, parent, config):
         self.frame = ttk.Frame(parent)
         self.config = config
-        series_var=tk.StringVar(value=config['series_no'])
-        search_keyword_var=tk.StringVar(value=config['phrase'])
-        download_dir_var=tk.StringVar(value=config['download_folder_path'])
+        self.series_var = tk.StringVar(value=config['series_no'])
+        self.search_keyword_var = tk.StringVar(value=config['phrase'])
+        self.download_dir_var = tk.StringVar(value=config['download_folder_path'])
+        self.series_label = tk.Label(self.frame, text = 'Series number', font=('arial',10))
+        self.series_entry = tk.Entry(self.frame, textvariable = self.series_var, font=('arial',10,'normal'), width=70)
 
-        series_label = tk.Label(self.frame, text = 'Series number', font=('arial',10))
-        series_entry = tk.Entry(self.frame, textvariable = series_var, font=('arial',10,'normal'), width=70)
+        self.status_label = tk.Label(self.frame, text='', font=('arial',10,'normal'))
+        self.download_btn = tk.Button(self.frame, text='Download', command=self.download, width=30)
 
-        search_keyword_label = tk.Label(self.frame, text = 'Search keyword', font=('arial',10))
-        search_keyword_entry = tk.Entry(self.frame, textvariable = search_keyword_var, font=('arial',10,'normal'), width=70)
+        self.search_keyword_label = tk.Label(self.frame, text = 'Search keyword', font=('arial',10))
+        self.search_keyword_entry = tk.Entry(self.frame, textvariable = self.search_keyword_var, font=('arial',10,'normal'), width=70)
 
-        download_dir_label = tk.Label(self.frame, text = 'Output folder', font=('arial',10))
-        download_dir_entry = tk.Entry(self.frame, textvariable = download_dir_var, font=('arial',10,'normal'), width=70)
-        download_dir_btn=tk.Button(self.frame,text = '...', command = self.select_download_dir, width=10)
+        self.download_dir_label = tk.Label(self.frame, text = 'Output folder', font=('arial',10))
+        self.download_dir_entry = tk.Entry(self.frame, textvariable = self.download_dir_var, font=('arial',10,'normal'), width=70)
+        self.download_dir_btn=tk.Button(self.frame,text = '...', command = self.select_download_dir, width=10)
 
-        download_btn=tk.Button(self.frame, text = 'Download', command = self.download, width=30)
-        status_label = tk.Label(self.frame, text = '', font = ('arial',10,'normal'))
+        self.download_btn=tk.Button(self.frame, text = 'Download', command = self.download, width=30)
+        self.status_label = tk.Label(self.frame, text = '', font = ('arial',10,'normal'))
 
         # Place the widgets on the window grid
-        series_label.grid(row=0,column=0, padx=5)
-        series_entry.grid(row=0,column=1, pady=10)
-        search_keyword_label.grid(row=1,column=0, padx=5)
-        search_keyword_entry.grid(row=1,column=1, pady=10)
-        download_dir_label.grid(row=2,column=0, padx=5)
-        download_dir_entry.grid(row=2,column=1, pady=10)
-        download_dir_btn.grid(row=2,column=2, pady=10)
-        download_btn.grid(row=3,column=1)
-        status_label.grid(row=4,column=1)
+        self.series_label.grid(row=0,column=0, padx=5)
+        self.series_entry.grid(row=0,column=1, pady=10)
+        self.search_keyword_label.grid(row=1,column=0, padx=5)
+        self.search_keyword_entry.grid(row=1,column=1, pady=10)
+        self.download_dir_label.grid(row=2,column=0, padx=5)
+        self.download_dir_entry.grid(row=2,column=1, pady=10)
+        self.download_dir_btn.grid(row=2,column=2, pady=10)
+        self.download_btn.grid(row=3,column=1)
+        self.status_label.grid(row=4,column=1)
 
     # Function to save the configuration to the JSON file
-    def save_config():
-        config['download_folder_path'] = download_dir_var.get()
-        config['phrase'] = search_keyword_var.get()
-        config['series_no'] = series_var.get()
-        with open(CONFIG_FILE, 'w') as f:
+    def save_config(self):
+        self.config['download_folder_path'] = self.download_dir_var.get()
+        self.config['phrase'] = self.search_keyword_var.get()
+        self.config['series_no'] = self.series_var.get()
+        with open('config.json', 'w') as f:
             json.dump(config, f)
         return config
 
     # Callback function to update the download status
-    def update_download_status(message):
-        status_label.config(text=message)
+    def update_download_status(self, message):
+        self.status_label.config(text=message)
         root.update()
 
     # Function to start the download on button press
-    def download():
-        status_label.config(text="Processing the standards...")
-        root.update()
-        config = save_config()
-        threading.Thread(target=std_retriever.download, args=(config, download_btn, update_download_status)).start()
+    def download(self):
+        self.status_label.config(text="Processing the standards...")
+        config = self.save_config()
+        threading.Thread(target=std_retriever.download, args=(config, self.download_btn, self.update_download_status)).start()
         
     # Directory selection dialog
-    def select_download_dir():
-        download_dir_var = filedialog.askdirectory()
-        download_dir_entry.delete(0, tk.END)
-        download_dir_entry.insert(0, download_dir_var)
+    def select_download_dir(self):
+        dir = filedialog.askdirectory()
+        self.download_dir_var.set(dir)
+        self.download_dir_entry.delete(0, tk.END)
+        self.download_dir_entry.insert(0, dir)
 
 if __name__ == "__main__":
     # File path for the configuration file
@@ -75,8 +77,8 @@ if __name__ == "__main__":
     # Create the main window
     root = tk.Tk()
     root.title(config.get("title", "Download Standards"))
-    std_retriever = StdRetriever(root, config)
-    std_retriever.frame.pack(expand=True, fill="both")
+    std_retriever_gui = StdRetriever(root, config)
+    std_retriever_gui.frame.pack(expand=True, fill="both")
 
     root.geometry("700x400")
 
