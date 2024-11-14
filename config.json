@@ -1,13 +1,13 @@
 {
   "llm_address": "localhost:11435",
-  "folder_path": "downloaded_standards",
+  "folder_path": "",
   "output_folder_path": "outputs",
   "specification_number": "",
   "type": [],
   "publication": "",
   "status": "",
   "technology": "",
-  "phrase": "metaverse",
+  "phrase": "",
   "series_no": "",
   "keywords": ["throughput"],
   "ignored_sections": [

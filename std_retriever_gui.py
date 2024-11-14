@@ -4,6 +4,10 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 import std_retriever
 import threading
+import sys
+
+# Change the working directory to the directory of the executable for PyInstaller
+os.chdir(sys._MEIPASS) if getattr(sys, 'frozen', False) else os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class StdRetriever:
     def __init__(self, parent, config):
@@ -88,7 +92,7 @@ class StdRetriever:
 
 if __name__ == "__main__":
     # File path for the configuration file
-    CONFIG_FILE = "config.json"
+    CONFIG_FILE = 'config.json'
 
     # Function to load the configuration from the JSON file
     with open(CONFIG_FILE, 'r') as f:

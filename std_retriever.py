@@ -10,7 +10,10 @@ import os
 import zipfile
 import pandas as pd 
 import shutil
+import sys
 
+# Change the working directory to the directory of the executable for PyInstaller
+os.chdir(sys._MEIPASS) if getattr(sys, 'frozen', False) else os.chdir(os.path.dirname(os.path.abspath(__file__)))
 ##############################################
 # Configuration variables
 host = "www.3gpp.org"
@@ -22,6 +25,7 @@ standard_specs_folder_path = "standard_specs_folder"
 
 ##############################################
 #
+
 
 class FTPClient:
     def __init__(self, host, user='', passwd=''):
