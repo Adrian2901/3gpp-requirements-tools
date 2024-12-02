@@ -146,7 +146,7 @@ def process_sequence_diagram(image_path, debug=False):
 
     return output
 
-def is_sequence_diagram(image_path):
+def is_sequence_diagram(image_path, llm_address, prompts):
     '''
     Ask the multimodal LLM whether the attached image is a sequence diagram.
     :param image_path: The path to the image to be analyzed
@@ -158,7 +158,7 @@ def is_sequence_diagram(image_path):
 
     # Construct the data to be sent to the LLM model
     prompt_text = prompts['verify_image_context']
-    url = f'http://localhost:11435/api/generate'
+    url = f'http://{llm_address}/api/generate'
     data = {
         "model": "minicpm-v",
         "prompt": prompt_text,
@@ -168,9 +168,14 @@ def is_sequence_diagram(image_path):
     headers = {'Content-Type': 'application/json'}
 
     # Send the request to the LLM model and extract the response from the JSON data
-    response = requests.post(url, data=json.dumps(data), headers=headers)
-    json_data = json.loads(response.text)
-    text = json_data['response']
+    try:
+        response = requests.post(url, data=json.dumps(data), headers=headers)
+        json_data = json.loads(response.text)
+        text = json_data['response']
+    except requests.exceptions.RequestException as e:
+        print(f"Error prompting the LLM: {e}")
+        # If the request doesn't go through, return True, to not lose anything
+        return True
 
     # List storing "relevant" answers in lowercase to compare with the LLM response
     relevant_answers = ["yes", "yes."]
@@ -181,12 +186,26 @@ def is_sequence_diagram(image_path):
         print(image_path + ": " + text)
         return False
 
-def extract_images_from_docx(docx_path, output_folder):
+def process_docx(docx_path, output_folder, llm_address, update):
+    output_file_path = os.path.join(output_folder, "diagrams.docx")
+    output_folder = os.path.join(output_folder, "images")
+
+    with open('prompts.json', 'r') as f:
+        prompts = json.load(f)
+
+    if not os.path.exists(docx_path):
+        update("Error: the input document was not found.")
+        return None
+    
     input_doc = docx2python(docx_path, output_folder, html=True)
     output_doc = Document()
     current_section = "No section"
 
-    for line in input_doc.text.splitlines():
+    lines = input_doc.text.splitlines()
+    i = 0
+    for line in lines:
+        update(f"Processing the document...", i / len(lines))
+        i += 1
         if "<h2>" in line or "<h3>" in line:
             current_section = line
         if "media/image" in line:
@@ -198,40 +217,18 @@ def extract_images_from_docx(docx_path, output_folder):
             try:
                 Image.open(img_path).save(output_folder + "/" + new_name)
                 os.remove(img_path)
-                if is_sequence_diagram(new_path):
+                if is_sequence_diagram(new_path, llm_address, prompts):
                     output_doc.add_heading(current_section[4:-4], level=1)
                     output_doc.add_picture(new_path, width=Inches(6))
                     output_doc.add_paragraph(process_sequence_diagram(new_path))
                     output_doc.add_page_break()
             except Exception as e:
-                print(f"Error adding image {img_name} to the document: {e}")
+                update(f"Error adding image {img_name} to the document.")
 
-    output_doc.save("diagrams.docx")
-                    
-
-
-def main():
-    standards_folder = "test_files"
-    output_folder = "test_images"
-    output_file = "extracted_images.docx"
-    
-    # if not os.path.exists(output_folder):
-    #     os.makedirs(output_folder)
-    
-    # for filename in os.listdir(standards_folder):
-    #     if filename.endswith(".docx"):
-    #         docx_path = os.path.join(standards_folder, filename)
-    #         extract_images_from_docx(docx_path, output_folder)
-    #         print(f"Extracted images from {filename}")
-
-    # encode_images_to_base64(output_folder)
-
-    print("Processing images")
-    extract_images_from_docx("test_files/23502-i20_l.docx", output_folder)
-
-with open('prompts.json', 'r') as f:
-    prompts = json.load(f)
+    output_doc.save(output_file_path)
+    update(f"Finished processing the document. Saved to {output_file_path}")
 
 
 if __name__ == "__main__":
+    process_docx("test_files/23502-i20_l.docx", "output", "localhost:11435", None)
     main()
