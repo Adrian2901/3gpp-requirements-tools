@@ -146,19 +146,18 @@ def process_sequence_diagram(image_path, debug=False):
 
     return output
 
-def ask_llm(image_path, word):
+def is_sequence_diagram(image_path):
     '''
-    Ask the LLM model to give context to a sequence diagram.
+    Ask the multimodal LLM whether the attached image is a sequence diagram.
     :param image_path: The path to the image to be analyzed
-    :param word: The word to be used to provide context as part of the prompt
-    :return: The response from the LLM model; a generated requirement
+    :return: Boolean value indicating whether the image is a sequence diagram
     '''
     
     # Encode the image to base64 so that it can be sent to the LLM model
     encoded_image = base64.b64encode(open(image_path, "rb").read()).decode('utf-8')
 
-    # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (url, data, and headers)
-    prompt_text = prompts['generate_image_context'].replace("{parameter}", word)
+    # Construct the data to be sent to the LLM model
+    prompt_text = prompts['verify_image_context']
     url = f'http://localhost:11435/api/generate'
     data = {
         "model": "minicpm-v",
@@ -168,10 +167,19 @@ def ask_llm(image_path, word):
         }
     headers = {'Content-Type': 'application/json'}
 
-    # Send the request to the LLM model, extract the response from the JSON data and return it
+    # Send the request to the LLM model and extract the response from the JSON data
     response = requests.post(url, data=json.dumps(data), headers=headers)
     json_data = json.loads(response.text)
-    return json_data['response']
+    text = json_data['response']
+
+    # List storing "relevant" answers in lowercase to compare with the LLM response
+    relevant_answers = ["yes", "yes."]
+    if text.lower() in relevant_answers:
+        return True
+    else:
+        # Print the other answers for debugging purposes
+        print(image_path + ": " + text)
+        return False
 
 def extract_images_from_docx(docx_path, output_folder):
     input_doc = docx2python(docx_path, output_folder, html=True)
@@ -190,33 +198,17 @@ def extract_images_from_docx(docx_path, output_folder):
             try:
                 Image.open(img_path).save(output_folder + "/" + new_name)
                 os.remove(img_path)
-
-                output_doc.add_heading(current_section[4:-4], level=1)
-                output_doc.add_picture(new_path, width=Inches(6))
-                output_doc.add_paragraph(process_sequence_diagram(new_path))
-                output_doc.add_page_break()
+                if is_sequence_diagram(new_path):
+                    output_doc.add_heading(current_section[4:-4], level=1)
+                    output_doc.add_picture(new_path, width=Inches(6))
+                    output_doc.add_paragraph(process_sequence_diagram(new_path))
+                    output_doc.add_page_break()
             except Exception as e:
                 print(f"Error adding image {img_name} to the document: {e}")
 
     output_doc.save("diagrams.docx")
                     
 
-
-
-def encode_images_to_base64(image_path):
-    for img_name in os.listdir(output_folder):
-        img_path = os.path.join(output_folder, img_name)
-        if img_name.endswith(".emf"):
-            
-            with open(new_path, "rb") as img_file:
-                encoded_string = base64.b64encode(img_file.read()).decode('utf-8')
-                print(f"Finished encoding {new_name}.")
-
-                llm_response = ask_llm(encoded_string)
-
-                txt_path = os.path.join(output_folder, f"{new_name[0:-4]}.txt")
-                with open(txt_path, "w") as txt_file:
-                    txt_file.write(llm_response)
 
 def main():
     standards_folder = "test_files"
@@ -235,7 +227,7 @@ def main():
     # encode_images_to_base64(output_folder)
 
     print("Processing images")
-    extract_images_from_docx("test_files/diagramstest.docx", output_folder)
+    extract_images_from_docx("test_files/23502-i20_l.docx", output_folder)
 
 with open('prompts.json', 'r') as f:
     prompts = json.load(f)
