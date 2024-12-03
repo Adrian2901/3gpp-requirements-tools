@@ -1,20 +1,18 @@
 # Mining 3GPP standards repository for AI-enhanced requirement discovery
 
-<div align="center">
-  <table style="border:0px solid white; width:100%;">
-    <tr>
-      <td align="center" style="border:0px;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="180">
-      </td>
-      <td align="center" style="border:0px;">
-        <img src="https://api.nuget.org/v3-flatcontainer/ollamasharp/3.0.14/icon" alt="Ollam Logo" width="180" height="">
-      </td>
-      <td align="center" style="border:0px;">
-        <img src="https://raw.githubusercontent.com/OpenBMB/MiniCPM-V/refs/heads/main/assets/minicpmv.png" alt="Mini-cpm Logo" width="180">
-      </td>
-    </tr>
-  </table>
+<div style="display: flex; justify-content: center; align-items: center; gap: 10px; height: 200px;">
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="180">
+  </div>
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <img src="https://api.nuget.org/v3-flatcontainer/ollamasharp/3.0.14/icon" alt="Ollam Logo" width="180">
+  </div>
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <img src="https://raw.githubusercontent.com/OpenBMB/MiniCPM-V/refs/heads/main/assets/minicpmv.png" alt="Mini-cpm Logo" width="180">
+  </div>
 </div>
+
+
 
 ## :book: Table of Contents
 - [About the project](#about-the-project)
@@ -93,15 +91,3 @@ The architecture diagram illustrates a pipeline for automating the extraction an
 
 
 
-<style>
-table {
-    border-collapse: collapse;
-}
-table, th, td {
-   border: none;
-}
-blockquote {
-    border-left: none;
-    padding-left: 10px;
-}
-</style>
