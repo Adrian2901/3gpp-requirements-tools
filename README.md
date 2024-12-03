@@ -1,13 +1,6 @@
 # Mining 3GPP standards repository for AI-enhanced requirement discovery
 
-<p style="text-align: left;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="180" alt="Python Logo" />
-  <img src="https://api.nuget.org/v3-flatcontainer/ollamasharp/3.0.14/icon" width="180" alt="Ollam Logo" />
-</p>
-<p style="text-align: center;">
-  <img src="https://raw.githubusercontent.com/OpenBMB/MiniCPM-V/refs/heads/main/assets/minicpmv.png" width="180" alt="Mini-cpm Logo" />
-</p>
-
+![logos](/diagrams-and-pictures/logos-removebg-preview.png)
 
 
 ## :book: Table of Contents
@@ -38,9 +31,10 @@ Tech stack used in the project:
 The architecture diagram illustrates a pipeline for automating the extraction and generation of requirements from 3GPP standards using Python scripts and LLMs, with human oversight to ensure accuracy. It begins with the retriever, a Python script that downloads the standards from the 3GPP repository in .docx format, unzipping them into a local folder. The next step involves filtering paragraphs containing specific keywords (e.g., "capacity") to identify relevant sections for requirements elicitation. These filtered paragraphs are fed into the LLM (Llama 3.1), which categorizes them as either applicable or non-applicable for generating requirements. Non-applicable paragraphs are stored in a CSV file for later review, while the applicable ones are passed through the same LLM to generate requirement-like text. The generated requirements are paired with their corresponding original paragraphs for traceability and are outputted alongside the non-applicable paragraphs in a formatted Excel file. This ensures that the requirements engineer can evaluate the results, reviewing non-applicable paragraphs to detect possible AI hallucinations and validating the generated requirements for accuracy. The process is designed to balance automation with human supervision, enabling efficient yet reliable requirements extraction.
 
 ## :wrench: How to use
-**Donwload standards tab**
+
 <img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
+**Donwload standards tab**
 
 ![download-standards-tab](/diagrams-and-pictures/sc-retriever-edited.PNG)
 
@@ -57,8 +51,10 @@ The architecture diagram illustrates a pipeline for automating the extraction an
 
 5. Click "Download" and wait for all the standards to be downloaded.
 
-**Generate requirements tab**
+
 <img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
+
+**Generate requirements tab**
 
 ![Generate-requirements-tab](/diagrams-and-pictures/sc-genreq-edited.PNG)
 
