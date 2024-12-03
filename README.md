@@ -4,10 +4,13 @@
   <table>
     <tr>
       <td align="center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="200">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="180">
       </td>
       <td align="center">
-        <img src="https://api.nuget.org/v3-flatcontainer/ollamasharp/3.0.14/icon" alt="Ollam Logo" width="200">
+        <img src="https://api.nuget.org/v3-flatcontainer/ollamasharp/3.0.14/icon" alt="Ollam Logo" width="180" height="">
+      </td>
+      <td align="center">
+        <img src="https://raw.githubusercontent.com/OpenBMB/MiniCPM-V/refs/heads/main/assets/minicpmv.png" alt="Mini-cpm Logo" width="180">
       </td>
     </tr>
   </table>
@@ -30,9 +33,58 @@ Tech stack used in the project:
 * Python
 
 ## :triangular_ruler: Solution Architecture
+<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+
+
 ![Diagram](/diagrams/architecture.png)
 
+<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+
+
+The architecture diagram illustrates a pipeline for automating the extraction and generation of requirements from 3GPP standards using Python scripts and LLMs, with human oversight to ensure accuracy. It begins with the retriever, a Python script that downloads the standards from the 3GPP repository in .docx format, unzipping them into a local folder. The next step involves filtering paragraphs containing specific keywords (e.g., "capacity") to identify relevant sections for requirements elicitation. These filtered paragraphs are fed into the LLM (Llama 3.1), which categorizes them as either applicable or non-applicable for generating requirements. Non-applicable paragraphs are stored in a CSV file for later review, while the applicable ones are passed through the same LLM to generate requirement-like text. The generated requirements are paired with their corresponding original paragraphs for traceability and are outputted alongside the non-applicable paragraphs in a formatted Excel file. This ensures that the requirements engineer can evaluate the results, reviewing non-applicable paragraphs to detect possible AI hallucinations and validating the generated requirements for accuracy. The process is designed to balance automation with human supervision, enabling efficient yet reliable requirements extraction.
+
 ## :wrench: How to use
+**Donwload standards tab**
+<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+
+
+![download-standards-tab](/diagrams/sc-retriever-edited.PNG)
+<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+
+1. Specify the 3GPP standard series you wish to download.  
+   (**Note:** Leaving the input blank will download all series.)
+
+2. Enter a keyword to search for in the titles of the standards.
+
+3. Choose whether to include or exclude technical reports or technical specifications.
+
+4. Specify the folder path where the standards should be downloaded.
+
+5. Click "Download" and wait for all the standards to be downloaded.
+
+**Generate requirements tab**
+<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+
+![Generate-requirements-tab](/diagrams/sc-genreq-edited.PNG)
+
+<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+
+6. Specify the LLM address and port.  
+   You can use an LLM running on your local host or provide the address of an external one.
+
+7. Select the LLM you wish to use for requirements elicitation.
+
+8. Choose the folder path containing the standard files.  
+   *(This could be the folder specified for downloading standards in step 4.)*
+
+9. Specify the output folder where the Excel sheets with extracted requirements will be saved.
+
+10. Enter the keywords to be used for eliciting requirements.
+
+11. Select the units of measurement for the keyword, if applicable.
+
+12. Click "Run" and wait for the process to complete.  
+    Once finished, check the output folder for the results.
 
 ## :busts_in_silhouette: Authors
 
