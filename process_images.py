@@ -24,16 +24,16 @@ def preprocess_image(image_path):
     _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
     # Kernels for removing horizontal and vertical lines
-    kernel_h = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 1))
+    # kernel_h = cv2.getStructuringElement(cv2.MORPH_RECT, (50, 1))
     kernel_v = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 50))
 
     # Remove horizontal lines
-    horizontal_lines = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel_h, iterations=2)
-    binary_no_hlines = cv2.subtract(binary, horizontal_lines)
+    # horizontal_lines = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel_h, iterations=2)
+    # binary_no_hlines = cv2.subtract(binary, horizontal_lines)
 
     # Remove vertical lines
-    vertical_lines = cv2.morphologyEx(binary_no_hlines, cv2.MORPH_OPEN, kernel_v, iterations=1)
-    binary_no_lines = cv2.subtract(binary_no_hlines, vertical_lines)
+    vertical_lines = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel_v, iterations=1)
+    binary_no_lines = cv2.subtract(binary, vertical_lines)
     
     # Apply slight blur to reduce noise
     blurred_img = cv2.medianBlur(binary_no_lines, 1)
@@ -141,9 +141,8 @@ def process_sequence_diagram(image_path, debug=False):
     for actor, _ in actors:
         output += f"\t{actor}\n"
     output += "Messages:\n"
-    for message in messages:
+    for message, bbox in messages:
         output += f"\t{message}\n"
-
     return output
 
 def is_sequence_diagram(image_path, llm_address, prompts):
