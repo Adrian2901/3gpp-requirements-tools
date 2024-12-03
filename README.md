@@ -1,10 +1,12 @@
 # Mining 3GPP standards repository for AI-enhanced requirement discovery
 
-![Python Logo](https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg){: width="height:90px"}
- ![Ollam Logo](https://api.nuget.org/v3-flatcontainer/ollamasharp/3.0.14/icon){: width="height:90px"}
- 
- ![Mini-cpm Logo](https://raw.githubusercontent.com/OpenBMB/MiniCPM-V/refs/heads/main/assets/minicpmv.png)
-{: width="height:90px"}
+<p style="text-align: left;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="180" alt="Python Logo" />
+  <img src="https://api.nuget.org/v3-flatcontainer/ollamasharp/3.0.14/icon" width="180" alt="Ollam Logo" />
+</p>
+<p style="text-align: center;">
+  <img src="https://raw.githubusercontent.com/OpenBMB/MiniCPM-V/refs/heads/main/assets/minicpmv.png" width="180" alt="Mini-cpm Logo" />
+</p>
 
 
 
