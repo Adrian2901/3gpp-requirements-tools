@@ -1,7 +1,7 @@
 # Mining 3GPP standards repository for AI-enhanced requirement discovery
 
 <div align="center">
-  <table border="0">
+  <table>
     <tr>
       <td align="center">
         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="180">
@@ -90,3 +90,18 @@ The architecture diagram illustrates a pipeline for automating the extraction an
 ## :busts_in_silhouette: Authors
 
 ## :scroll: License
+
+
+
+<style>
+table {
+    border-collapse: collapse;
+}
+table, th, td {
+   border: none;
+}
+blockquote {
+    border-left: none;
+    padding-left: 10px;
+}
+</style>
