@@ -1,7 +1,7 @@
 # Mining 3GPP standards repository for AI-enhanced requirement discovery
 
 <div align="center">
-  <table>
+  <table border="0">
     <tr>
       <td align="center">
         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="180">
@@ -33,23 +33,24 @@ Tech stack used in the project:
 * Python
 
 ## :triangular_ruler: Solution Architecture
-<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
 
+<img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
-![Diagram](/diagrams/architecture.png)
+![Diagram](/diagrams-and-pictures/architecture.png)
+<img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
-<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
 
 
 The architecture diagram illustrates a pipeline for automating the extraction and generation of requirements from 3GPP standards using Python scripts and LLMs, with human oversight to ensure accuracy. It begins with the retriever, a Python script that downloads the standards from the 3GPP repository in .docx format, unzipping them into a local folder. The next step involves filtering paragraphs containing specific keywords (e.g., "capacity") to identify relevant sections for requirements elicitation. These filtered paragraphs are fed into the LLM (Llama 3.1), which categorizes them as either applicable or non-applicable for generating requirements. Non-applicable paragraphs are stored in a CSV file for later review, while the applicable ones are passed through the same LLM to generate requirement-like text. The generated requirements are paired with their corresponding original paragraphs for traceability and are outputted alongside the non-applicable paragraphs in a formatted Excel file. This ensures that the requirements engineer can evaluate the results, reviewing non-applicable paragraphs to detect possible AI hallucinations and validating the generated requirements for accuracy. The process is designed to balance automation with human supervision, enabling efficient yet reliable requirements extraction.
 
 ## :wrench: How to use
 **Donwload standards tab**
-<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+<img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
 
-![download-standards-tab](/diagrams/sc-retriever-edited.PNG)
-<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+![download-standards-tab](/diagrams-and-pictures/sc-retriever-edited.PNG)
+
+<img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
 1. Specify the 3GPP standard series you wish to download.  
    (**Note:** Leaving the input blank will download all series.)
@@ -63,11 +64,11 @@ The architecture diagram illustrates a pipeline for automating the extraction an
 5. Click "Download" and wait for all the standards to be downloaded.
 
 **Generate requirements tab**
-<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+<img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
-![Generate-requirements-tab](/diagrams/sc-genreq-edited.PNG)
+![Generate-requirements-tab](/diagrams-and-pictures/sc-genreq-edited.PNG)
 
-<hr style="border: none; height: 1px; background: linear-gradient(to right, rgba(30, 144, 255, 0), #1e90ff, rgba(30, 144, 255, 0)); margin: 20px 0;">
+<img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
 6. Specify the LLM address and port.  
    You can use an LLM running on your local host or provide the address of an external one.
