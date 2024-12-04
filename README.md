@@ -1,4 +1,4 @@
-# Mining 3GPP standards repository for AI-enhanced requirement discovery
+# 3GPP Requirement Tools
 
 ![logos](/diagrams-and-pictures/logos-removebg-preview.png)
 
@@ -7,6 +7,7 @@
 - [About the project](#about-the-project)
 - [Solution Architecture](#solution-architecture)
 - [How to use](#how-to-use)
+- [Setup](#setup)
 - [Authors](#authors)
 - [License](#license)
 
@@ -29,6 +30,16 @@ Tech stack used in the project:
 
 
 The architecture diagram illustrates a pipeline for automating the extraction and generation of requirements from 3GPP standards using Python scripts and LLMs, with human oversight to ensure accuracy. It begins with the retriever, a Python script that downloads the standards from the 3GPP repository in .docx format, unzipping them into a local folder. The next step involves filtering paragraphs containing specific keywords (e.g., "capacity") to identify relevant sections for requirements elicitation. These filtered paragraphs are fed into the LLM (Llama 3.1), which categorizes them as either applicable or non-applicable for generating requirements. Non-applicable paragraphs are stored in a CSV file for later review, while the applicable ones are passed through the same LLM to generate requirement-like text. The generated requirements are paired with their corresponding original paragraphs for traceability and are outputted alongside the non-applicable paragraphs in a formatted Excel file. This ensures that the requirements engineer can evaluate the results, reviewing non-applicable paragraphs to detect possible AI hallucinations and validating the generated requirements for accuracy. The process is designed to balance automation with human supervision, enabling efficient yet reliable requirements extraction.
+
+## Setup
+
+For certain functionality to work one needs to setup a locally running LLM model. This setup is necessary as following:
+- Standards Retriever: No Setup
+- Sequence Diagram Retriever: Optional
+- Requirements Generator: Mandatory
+
+To setup a locally running LLM:
+TODO: either link a good source, or create our own step by step
 
 ## :wrench: How to use
 
@@ -78,6 +89,9 @@ The architecture diagram illustrates a pipeline for automating the extraction an
     Once finished, check the output folder for the results.
 
 ## :busts_in_silhouette: Authors
+
+David Schön: @DavinciOfSweden
+
 
 ## :scroll: License
 
