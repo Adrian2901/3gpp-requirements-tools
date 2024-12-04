@@ -74,7 +74,7 @@ class DiagramProcessor:
     # Directory selection dialog
     def select_output_dir(self):
         dir = filedialog.askdirectory()
-        self.output_dir_var.set(dir)
+        self.output_var.set(dir)
         self.output_dir_entry.delete(0, tk.END)
         self.output_dir_entry.insert(0, dir)
 
