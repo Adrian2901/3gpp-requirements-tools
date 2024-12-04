@@ -1,14 +1,14 @@
 {
   "llm_address": "localhost:11435",
   "folder_path": "",
-  "output_folder_path": "outputs",
+  "output_folder_path": "",
   "specification_number": "",
-  "type": [],
+  "type": ["Technical Report (TR)", "Technical Specification (TS)"],
   "publication": "",
   "status": "",
   "technology": "",
   "phrase": "",
-  "series_no": "",
+  "series_no": "27",
   "keywords": ["throughput"],
   "ignored_sections": [
     "References",
@@ -18,7 +18,7 @@
   ],
   "model_name": "llama3.1:70b",
   "verbose": false,
-  "download_folder_path": "downloaded_standards",
+  "download_folder_path": "",
   "units": {
     "ms": "\\b\\d+\\s*ms\\b\\.?",
     "percent": "\\b\\d+\\s*%\\b\\.?",
