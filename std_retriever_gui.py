@@ -34,7 +34,7 @@ class StdRetriever:
         self.ts_checkbox.grid(row=0, column=1, padx=25)
 
         self.download_dir_label = tk.Label(self.frame, text = 'Output folder', font=('arial',10))
-        self.download_dir_entry = tk.Entry(self.frame, textvariable = self.download_dir_var, font=('arial',10,'normal'), width=70)
+        self.download_dir_entry = tk.Entry(self.frame, textvariable = self.download_dir_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.download_dir_btn=tk.Button(self.frame,text = '...', command = self.select_download_dir, width=10)
 
         self.download_btn=tk.Button(self.frame, text = 'Download', command = self.download, width=30)
@@ -69,9 +69,12 @@ class StdRetriever:
 
     # Function to start the download on button press
     def download(self):
-        self.status_label.config(text="Processing the standards...")
-        config = self.save_config()
-        threading.Thread(target=std_retriever.download, args=(config, self.download_btn, self.update_download_status)).start()
+        if self.download_dir_var.get() == "":
+            self.status_label.config(text="Please fill in the output folder field!")
+        else:
+            self.status_label.config(text="Processing the standards...")
+            config = self.save_config()
+            threading.Thread(target=std_retriever.download, args=(config, self.download_btn, self.update_download_status)).start()
         
     def update_checked(self):
         checked = []

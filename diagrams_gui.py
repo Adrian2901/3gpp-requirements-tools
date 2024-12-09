@@ -22,11 +22,11 @@ class DiagramProcessor:
         self.ip_entry = tk.Entry(self.frame, textvariable = self.ip_var, font=('arial',10,'normal'), width=70)
 
         self.input_label = tk.Label(self.frame, text = 'Input file', font=('arial',10))
-        self.input_entry = tk.Entry(self.frame, textvariable = self.input_var, font=('arial',10,'normal'), width=70)
+        self.input_entry = tk.Entry(self.frame, textvariable = self.input_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.input_btn=tk.Button(self.frame,text = '...', command = self.select_input_file, width=10)
 
         self.output_dir_label = tk.Label(self.frame, text = 'Output folder', font=('arial',10))
-        self.output_dir_entry = tk.Entry(self.frame, textvariable = self.output_var, font=('arial',10,'normal'), width=70)
+        self.output_dir_entry = tk.Entry(self.frame, textvariable = self.output_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.output_dir_btn=tk.Button(self.frame,text = '...', command = self.select_output_dir, width=10)
 
         self.run_btn=tk.Button(self.frame, text = 'Download', command = self.run, width=30)
@@ -61,8 +61,13 @@ class DiagramProcessor:
 
     # Function to start the download on button press
     def run(self):
-        self.update_status("Reading the document...")
-        threading.Thread(target=process_images.process_docx, args=(self.input_var.get(), self.output_var.get(), self.ip_var.get(), self.update_status)).start()
+        if self.input_var.get() == "" :
+            self.update_status("Please fill in the input folder field!")
+        elif self.output_var.get() == "":
+            self.update_status("Please fill in the output folder field!")
+        else:
+            self.update_status("Reading the document...")
+            threading.Thread(target=process_images.process_docx, args=(self.input_var.get(), self.output_var.get(), self.ip_var.get(), self.update_status)).start()
 
     # File selection dialog
     def select_input_file(self):

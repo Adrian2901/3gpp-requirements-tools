@@ -26,12 +26,12 @@ class RequirementsGenerator:
 
         # Input path input in the GUI
         self.path_label = tk.Label(self.frame, text = 'Input folder path', font=('arial',10))
-        self.path_entry = tk.Entry(self.frame, textvariable = self.path_var, font=('arial',10,'normal'), width=70)
+        self.path_entry = tk.Entry(self.frame, textvariable = self.path_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.path_btn=tk.Button(self.frame,text = '...', command = self.select_path_dir, width=10)
 
         # Output path input in the GUI
         self.output_label = tk.Label(self.frame, text = 'Output folder path', font = ('arial',10,'normal'))
-        self.output_entry=tk.Entry(self.frame, textvariable = self.output_var, font = ('arial',10,'normal'), width=70)
+        self.output_entry=tk.Entry(self.frame, textvariable = self.output_var, font = ('arial',10,'normal'), width=70, state="readonly")
         self.output_btn=tk.Button(self.frame,text = '...', command = self.select_output_dir, width=10)
 
         # Keywords input in the GUI
@@ -104,9 +104,13 @@ class RequirementsGenerator:
 
     # Function to start the filtering on button press
     def run(self):
+        self.config = self.save_config()
+        # Validate the input fields
+        if not self.config['llm_address'] or not self.config['folder_path'] or not self.config['output_folder_path'] or not self.config['keywords']:
+            self.update_status("Please fill in all the fields!")
+            return
         self.run_btn.config(state=tk.DISABLED)
         self.update_status("Starting the filtering...")
-        self.config = self.save_config()
         try:
             # Function to run on a separate thread
             def run_tasks():
@@ -119,7 +123,7 @@ class RequirementsGenerator:
             task_thread.start()
         except Exception as e:
             print(e)
-            update_status("An error occurred! Please try again.")
+            self.update_status("An error occurred! Please try again.")
 
     def on_model_select(self, event):
         self.model_var = self.combo_box.get()
