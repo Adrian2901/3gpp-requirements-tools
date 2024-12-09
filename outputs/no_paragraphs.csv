@@ -1,4 +1,0 @@
-File;Chapter;Paragraph;LLM response
-27007-j00;8.55	Positioning control +CPOS;   <!ELEMENT SFN_TOW_Unc (#PCDATA)>  <!-- Integer 0..1 0- Uncertainity less than 10 ms, 1-Uncertainity more than 10 ms -->;NO
-27007-j00;8.84	Application level measurement configuration for NR +CAPPLEVMCNR;0	120 ms;NO
-27007-j00;8.84	Application level measurement configuration for NR +CAPPLEVMCNR;2	480 ms;NO
