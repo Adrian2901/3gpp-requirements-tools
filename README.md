@@ -86,8 +86,11 @@ For certain functionality to work one needs to setup a locally running LLM model
 ## :busts_in_silhouette: Authors
 
 Adrian Hassa: [@Adrian2901](https://github.com/Adrian2901)
+
 Amirpooya Asadollahnejad: [@amirpooya78](https://github.com/amirpooya78)
+
 David Schön: [@DavinciOfSweden](https://github.com/DavinciOfSweden)
+
 Marcelo Santibáñez: [@ssheloors](https://github.com/ssheloors)
 
 
