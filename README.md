@@ -1,7 +1,5 @@
 # 3GPP Requirement Tools
 
-![logos](/diagrams-and-pictures/logos-removebg-preview.png)
-
 
 ## :book: Table of Contents
 - [About the project](#about-the-project)
@@ -16,9 +14,8 @@ In this project we aimed to use the assisstance of the Large-language-Models(LLM
 With advances in generative AI and large language models (LLMs), we can now leverage these tools to automate the extraction of requirements from complex technical documents. Traditionally, requirements elicitation from dense standards like 3GPP has been time-consuming and requires lot of manual work. This project aims to address these challenges by using LLMs to streamline the extraction process, reducing manual effort, improving accuracy, and making the process more efficient and reliable.
 
 Tech stack used in the project: 
-* Ollama 
-* Mini-cpm
-* Python
+* [Python](https://www.python.org/)
+* [Ollama](https://github.com/ollama/ollama) 
 
 ## :triangular_ruler: Solution Architecture
 
@@ -38,8 +35,6 @@ For certain functionality to work one needs to setup a locally running LLM model
 - Sequence Diagram Retriever: Optional
 - Requirements Generator: Mandatory
 
-To setup a locally running LLM:
-TODO: either link a good source, or create our own step by step
 
 ## :wrench: How to use
 
@@ -90,7 +85,10 @@ TODO: either link a good source, or create our own step by step
 
 ## :busts_in_silhouette: Authors
 
-David Schön: @DavinciOfSweden
+Adrian Hassa: [@Adrian2901](https://github.com/Adrian2901)
+Amirpooya Asadollahnejad: [@amirpooya78](https://github.com/amirpooya78)
+David Schön: [@DavinciOfSweden](https://github.com/DavinciOfSweden)
+Marcelo Santibáñez: [@ssheloors](https://github.com/ssheloors)
 
 
 ## :scroll: License
