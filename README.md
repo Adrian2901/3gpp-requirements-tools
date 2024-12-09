@@ -15,7 +15,9 @@ With advances in generative AI and large language models (LLMs), we can now leve
 
 Tech stack used in the project: 
 * [Python](https://www.python.org/)
-* [Ollama](https://github.com/ollama/ollama) 
+* [Ollama](https://github.com/ollama/ollama)
+
+This repository was migrated from [miroslawstaron/requirements_standards](https://github.com/miroslawstaron/requirements_standards)
 
 ## :triangular_ruler: Solution Architecture
 
