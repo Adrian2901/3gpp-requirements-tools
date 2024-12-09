@@ -61,8 +61,13 @@ class DiagramProcessor:
 
     # Function to start the download on button press
     def run(self):
-        self.update_status("Reading the document...")
-        threading.Thread(target=process_images.process_docx, args=(self.input_var.get(), self.output_var.get(), self.ip_var.get(), self.update_status)).start()
+        if self.input_var.get() == "" :
+            self.update_status("Please fill in the input folder field!")
+        elif self.output_var.get() == "":
+            self.update_status("Please fill in the output folder field!")
+        else:
+            self.update_status("Reading the document...")
+            threading.Thread(target=process_images.process_docx, args=(self.input_var.get(), self.output_var.get(), self.ip_var.get(), self.update_status)).start()
 
     # File selection dialog
     def select_input_file(self):

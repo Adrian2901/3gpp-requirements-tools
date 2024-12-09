@@ -69,9 +69,12 @@ class StdRetriever:
 
     # Function to start the download on button press
     def download(self):
-        self.status_label.config(text="Processing the standards...")
-        config = self.save_config()
-        threading.Thread(target=std_retriever.download, args=(config, self.download_btn, self.update_download_status)).start()
+        if self.download_dir_var.get() == "":
+            self.status_label.config(text="Please fill in the output folder field!")
+        else:
+            self.status_label.config(text="Processing the standards...")
+            config = self.save_config()
+            threading.Thread(target=std_retriever.download, args=(config, self.download_btn, self.update_download_status)).start()
         
     def update_checked(self):
         checked = []

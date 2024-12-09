@@ -104,9 +104,13 @@ class RequirementsGenerator:
 
     # Function to start the filtering on button press
     def run(self):
+        self.config = self.save_config()
+        # Validate the input fields
+        if not self.config['llm_address'] or not self.config['folder_path'] or not self.config['output_folder_path'] or not self.config['keywords']:
+            self.update_status("Please fill in all the fields!")
+            return
         self.run_btn.config(state=tk.DISABLED)
         self.update_status("Starting the filtering...")
-        self.config = self.save_config()
         try:
             # Function to run on a separate thread
             def run_tasks():
@@ -119,7 +123,7 @@ class RequirementsGenerator:
             task_thread.start()
         except Exception as e:
             print(e)
-            update_status("An error occurred! Please try again.")
+            self.update_status("An error occurred! Please try again.")
 
     def on_model_select(self, event):
         self.model_var = self.combo_box.get()
