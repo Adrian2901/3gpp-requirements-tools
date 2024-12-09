@@ -34,7 +34,7 @@ class StdRetriever:
         self.ts_checkbox.grid(row=0, column=1, padx=25)
 
         self.download_dir_label = tk.Label(self.frame, text = 'Output folder', font=('arial',10))
-        self.download_dir_entry = tk.Entry(self.frame, textvariable = self.download_dir_var, font=('arial',10,'normal'), width=70)
+        self.download_dir_entry = tk.Entry(self.frame, textvariable = self.download_dir_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.download_dir_btn=tk.Button(self.frame,text = '...', command = self.select_download_dir, width=10)
 
         self.download_btn=tk.Button(self.frame, text = 'Download', command = self.download, width=30)

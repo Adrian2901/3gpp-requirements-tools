@@ -22,11 +22,11 @@ class DiagramProcessor:
         self.ip_entry = tk.Entry(self.frame, textvariable = self.ip_var, font=('arial',10,'normal'), width=70)
 
         self.input_label = tk.Label(self.frame, text = 'Input file', font=('arial',10))
-        self.input_entry = tk.Entry(self.frame, textvariable = self.input_var, font=('arial',10,'normal'), width=70)
+        self.input_entry = tk.Entry(self.frame, textvariable = self.input_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.input_btn=tk.Button(self.frame,text = '...', command = self.select_input_file, width=10)
 
         self.output_dir_label = tk.Label(self.frame, text = 'Output folder', font=('arial',10))
-        self.output_dir_entry = tk.Entry(self.frame, textvariable = self.output_var, font=('arial',10,'normal'), width=70)
+        self.output_dir_entry = tk.Entry(self.frame, textvariable = self.output_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.output_dir_btn=tk.Button(self.frame,text = '...', command = self.select_output_dir, width=10)
 
         self.run_btn=tk.Button(self.frame, text = 'Download', command = self.run, width=30)

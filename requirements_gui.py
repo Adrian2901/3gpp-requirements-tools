@@ -26,12 +26,12 @@ class RequirementsGenerator:
 
         # Input path input in the GUI
         self.path_label = tk.Label(self.frame, text = 'Input folder path', font=('arial',10))
-        self.path_entry = tk.Entry(self.frame, textvariable = self.path_var, font=('arial',10,'normal'), width=70)
+        self.path_entry = tk.Entry(self.frame, textvariable = self.path_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.path_btn=tk.Button(self.frame,text = '...', command = self.select_path_dir, width=10)
 
         # Output path input in the GUI
         self.output_label = tk.Label(self.frame, text = 'Output folder path', font = ('arial',10,'normal'))
-        self.output_entry=tk.Entry(self.frame, textvariable = self.output_var, font = ('arial',10,'normal'), width=70)
+        self.output_entry=tk.Entry(self.frame, textvariable = self.output_var, font = ('arial',10,'normal'), width=70, state="readonly")
         self.output_btn=tk.Button(self.frame,text = '...', command = self.select_output_dir, width=10)
 
         # Keywords input in the GUI
