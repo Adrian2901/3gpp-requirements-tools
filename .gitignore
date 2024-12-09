@@ -45,3 +45,5 @@ topic_relevant.xlsx
 /downloaded_standards
 /build 
 /zipped_standards
+/.vscode
+/standards/downloaded_standards
