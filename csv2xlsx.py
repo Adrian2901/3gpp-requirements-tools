@@ -49,7 +49,6 @@ def csv_to_xlsx(config, update):
     # different input files
     # 1 and 2 have the same structure so different logic is only needed for 0
 
-
     # Create a new XLSX file
     workbook = xlsxwriter.Workbook(output_xlsx) 
     # Add a format for the header cells
@@ -75,8 +74,6 @@ def csv_to_xlsx(config, update):
             sheet.write(0, 4, "Requirement", header_format) # Requirement column
             sheet.set_column('E:E', 45)  # Requirement column
 
- 
-
     # read new_requirements.csv and write to its sheet
     with open(new_requirements, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter=';')
@@ -93,7 +90,6 @@ def csv_to_xlsx(config, update):
             highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_format)
             # highlight keyword for the requirement column 
             highlight_keyword(requirement, keyword, sheet, row_idx, bold_format, wrap_format)
-           
     
     # read latency_possible.csv and write to its sheet
     with open(latency_possible, 'r', encoding='utf-8') as f:
@@ -128,9 +124,5 @@ def csv_to_xlsx(config, update):
     update("Done! Check the output folder for the results.")
 
 
-# Example usage
-# outputs = ['outputs\\new_requirements.csv', "outputs\latency_paragraphs.csv", "outputs\latency_no_paragraphs.csv"]
-
-# csv_to_xlsx(outputs, "outputs\output.xlsx", "latency")
-
-
+if __name__ == "__main__":
+    print("This is a script that re-structures the output.\nUsage: python gui_requirements.py")

@@ -8,7 +8,6 @@ from docx import Document
 from docx.shared import Inches
 from docx2python import docx2python
 from PIL import Image
-from io import BytesIO, StringIO
 
 def preprocess_image(image_path):
     '''
@@ -42,7 +41,6 @@ def preprocess_image(image_path):
     preprocessed_img = cv2.bitwise_not(blurred_img)
 
     return preprocessed_img
-
 
 def process_sequence_diagram(image_path, debug=False):
     ''' 
@@ -229,5 +227,4 @@ def process_docx(docx_path, output_folder, llm_address, update):
 
 
 if __name__ == "__main__":
-    process_docx("test_files/23502-i20_l.docx", "output", "localhost:11435", None)
-    main()
+    print("usage: python gui_process_images.py")

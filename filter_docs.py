@@ -1,5 +1,3 @@
-# import the necessary libraries
-# we should probably change this 
 import os
 import csv
 from docx import Document
@@ -8,7 +6,6 @@ import json
 import re
 from doc2docx import convert
 import sys
-
 
 # Change the working directory to the directory of the executable
 os.chdir(sys._MEIPASS) if getattr(sys, 'frozen', False) else os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -25,8 +22,6 @@ def ask_llm(paragraph, filter_word):
     :param filter_word: The word to be used as a filter
     :return: The response from the LLM model; either "NO" or "POSSIBLE"
     '''
-
-    
 
     # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (url, data, and headers)
     prompt_text = prompts['verify_context'].replace("{parameter}", filter_word) + paragraph
@@ -66,7 +61,6 @@ def extract_paragraphs_with_keywords(doc, keywords, filename, config):
             else:
                 paragraphs.append((filename, current_section, paragraph.text))
     return paragraphs, requirements
-
 
 def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv, config, update):
     requirements = []
@@ -110,7 +104,6 @@ def process_docx_files_in_folder(folder_path, search_word, possible_csv, no_csv,
 with open('prompts.json', 'r') as f:
     prompts = json.load(f)
 
-
 def execute_filtering(config, update):
     llm_ip = config['llm_address']
     llm = config['model_name']
@@ -123,5 +116,6 @@ def execute_filtering(config, update):
 ########################################################################
 # main function (executed when running this file)
 
+
 if __name__ == "__main__":
-    print("skibidi")
+    print("This scipt is part of the requirements generation.\nusage: python gui_requirements.py")

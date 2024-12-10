@@ -22,10 +22,7 @@ download_folder_path = "zipped_standards"
 excel_spec_file = "Specification_list.xlsx"
 standard_specs_folder_path = "standard_specs_folder"
 
-
 ##############################################
-#
-
 
 class FTPClient:
     def __init__(self, host, user='', passwd=''):
@@ -75,7 +72,6 @@ class FTPClient:
         if self.ftp:
             self.ftp.close()
             print(f"Disconnected from {self.host}")
-
 
 # std_list is path to the JSON file that contains the name of the files alongside their version
 # local_path is path to the destination folder you want to download standards to
@@ -129,7 +125,6 @@ def get_standards(ftp_client: FTPClient, std_list: str, local_path: str, update)
         if(ftp_client.ftp.pwd() != ftp_directory_path):
             ftp_client.change_directory('..')
             
-
 def unzip_all_in_folder(folder_path, extract_to): # This function is created by Chat-GPT
     os.makedirs(extract_to, exist_ok=True)
     clear_folder(extract_to)
@@ -149,7 +144,6 @@ def unzip_all_in_folder(folder_path, extract_to): # This function is created by 
             os.remove(file_path)
         else:
             print(f'Skipping {file_name}, not a zip file.')
-
 
 def search_title(folder_path, xlsx_file, config): # folder_path: where json files will be stored, xlsx_file: excel file thatt holds the spec_no s and titles.
     os.makedirs(folder_path, exist_ok=True)
@@ -192,7 +186,6 @@ def search_title(folder_path, xlsx_file, config): # folder_path: where json file
 
     # Apply the mapping function to the dataframe
     result = df[df.apply(row_matches, axis=1)]
-
 
     # going through each row of excel file 
     for index, row in result.iterrows():
@@ -267,7 +260,6 @@ def clear_folder(folder_path): # This function is created by Chat-GPT
     else:
         print("Folder does not exist.")
 
-
 #################### script #########################
 
 def download(config, button_handler, update):
@@ -304,6 +296,4 @@ def download(config, button_handler, update):
 
 
 if __name__ == "__main__":
-    with open('config.json', 'r') as file:
-        config = json.load(file)
-    download(config)
+    print("This is a script that retrieves 3GPP standards documents with filters.\nUsage: python gui_std_retriever.py")
