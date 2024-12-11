@@ -5,7 +5,7 @@ a = Analysis(
     ['diagrams_gui.py'],
     pathex=[],
     binaries=[],
-    datas=[('prompts.json', '.'), ('config.json', '.'), ('Specification_list.xlsx', '.'), ('unzipped_standards', '.'), ('zipped_standards', '.')],
+    datas=[('prompts.json', '.'), ('config.json', '.'), ('Specification_list.xlsx', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
