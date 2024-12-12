@@ -7,7 +7,6 @@ llm_ip = "localhost:11435"
 global llm
 llm = "llama3.1"
 
-
 def ask_llm(paragraph, word):
     '''
     Ask the LLM model to generate a requirement.
@@ -15,8 +14,6 @@ def ask_llm(paragraph, word):
     :param word: The word to be used to provide context as part of the prompt
     :return: The response from the LLM model; a generated requirement
     '''
-
-
 
     # Replace {parameter} with the desired term (e.g., "latency"), and setup what we need to send the request (url, data, and headers)
     prompt_text = prompts['generate_requirement'].replace("{parameter}", word) + paragraph
@@ -57,16 +54,8 @@ def generate_req(config, update):
     df.to_csv(output_csv, sep=';', index=False)
     update('Finished generating requirements!')
 
-
 with open('prompts.json', 'r') as f:
     prompts = json.load(f)
 
 if __name__ == '__main__':
-    generate_req('outputs/latency_paragraphs.csv')
-
-
-
-
-
-
-    
+    print("This is a script that takes 3GPP standards and converts them into LLM-generated requirements.\nUsage: python gui_requirements.py")

@@ -8,7 +8,7 @@ import csv
 import xlsxwriter
 import re
 
-def highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_format):
+def highlight_keyword(paragraph, column, keyword, sheet, row_idx, bold_format, wrap_format):
     matches = list(re.finditer(f'({keyword})', paragraph, flags=re.IGNORECASE))  # Use finditer for all matches
     rich_text = []
     start_index = 0
@@ -26,11 +26,11 @@ def highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_form
                 rich_text.append(paragraph[start_index:])  # Normal text
                 # Write the rich text back to the 'Paragraph' cell with wrapping
             if rich_text:
-                sheet.write_rich_string(row_idx, 2, *rich_text)  # Column 2: Paragraph
+                sheet.write_rich_string(row_idx, column, *rich_text)  # Column 2: Paragraph
             else:
                 # Write paragraph normally with wrapping if the keyword is not found
-                sheet.write(row_idx, 2, paragraph, wrap_format)
-            # sheet.set_row(row_idx, None, wrap_format)  # Enable text wrapping for the entire row
+                sheet.write(row_idx, column, paragraph, wrap_format)
+            sheet.set_row(row_idx, None, wrap_format)  # Enable text wrapping for the entire row
 
 # Defautl input_csv is a list of the three csv files containing the default names we used in the project
 def csv_to_xlsx(config, update):
@@ -48,7 +48,6 @@ def csv_to_xlsx(config, update):
 
     # different input files
     # 1 and 2 have the same structure so different logic is only needed for 0
-
 
     # Create a new XLSX file
     workbook = xlsxwriter.Workbook(output_xlsx) 
@@ -75,8 +74,6 @@ def csv_to_xlsx(config, update):
             sheet.write(0, 4, "Requirement", header_format) # Requirement column
             sheet.set_column('E:E', 45)  # Requirement column
 
- 
-
     # read new_requirements.csv and write to its sheet
     with open(new_requirements, 'r', encoding='utf-8') as f:
         reader = csv.reader(f, delimiter=';')
@@ -89,10 +86,12 @@ def csv_to_xlsx(config, update):
             sheet.write(row_idx, 2, paragraph, wrap_format)    # Column 2: Paragraph
             sheet.write(row_idx, 3, llm_response) # Column 3: LLM Response
             sheet.write(row_idx, 4, requirement, wrap_format) # Column 4: Requirement
-             # Check if the keyword is in the paragraph and highlight it
-            highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_format)
+            # Check if the keyword is in the paragraph and highlight it
+            column = 2 #arbitrarily passing the column number now, 2 is the paragraph column
+            highlight_keyword(paragraph, column, keyword, sheet, row_idx, bold_format, wrap_format)
             # highlight keyword for the requirement column 
-            highlight_keyword(requirement, keyword, sheet, row_idx, bold_format, wrap_format)
+            column = 4 #column 4 = requirement column
+            highlight_keyword(requirement, column, keyword, sheet, row_idx, bold_format, wrap_format)
            
     
     # read latency_possible.csv and write to its sheet
@@ -107,7 +106,8 @@ def csv_to_xlsx(config, update):
             sheet.write(row_idx, 2, paragraph, wrap_format)     # Column 2: Paragraph
             sheet.write(row_idx, 3, llm_response) # Column 3: LLM Response
             # Check if the keyword is in the paragraph and highlight it
-            highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_format)
+            column = 2 # paragraph column
+            highlight_keyword(paragraph, column, keyword, sheet, row_idx, bold_format, wrap_format)
 
     # read latency_no.csv and write to its sheet
     with open(latency_no, 'r', encoding='utf-8') as f:
@@ -120,17 +120,13 @@ def csv_to_xlsx(config, update):
             sheet.write(row_idx, 1, chapter)      # Column 1: Chapter
             sheet.write(row_idx, 2, paragraph, wrap_format)     # Column 2: Paragraph
             sheet.write(row_idx, 3, llm_response) # Column 3: LLM Response
-            # Check if the keyword is in the paragraph and highlight it
-            highlight_keyword(paragraph, keyword, sheet, row_idx, bold_format, wrap_format)
+            column = 2 # paragraph column
+            highlight_keyword(paragraph, column, keyword, sheet, row_idx, bold_format, wrap_format)
 
     #close the workbook
     workbook.close()
     update("Done! Check the output folder for the results.")
 
 
-# Example usage
-# outputs = ['outputs\\new_requirements.csv', "outputs\latency_paragraphs.csv", "outputs\latency_no_paragraphs.csv"]
-
-# csv_to_xlsx(outputs, "outputs\output.xlsx", "latency")
-
-
+if __name__ == "__main__":
+    print("This is a script that re-structures the output.\nUsage: python gui_requirements.py")
