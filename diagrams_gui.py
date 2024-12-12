@@ -14,8 +14,8 @@ class DiagramProcessor:
         self.frame = ttk.Frame(parent)
         self.config = config
         self.ip_var=tk.StringVar(value=config['llm_address'])
-        self.input_var = tk.StringVar(value="test_files/23502-i20_l.docx")
-        self.output_var = tk.StringVar(value="diagrams_output")
+        self.input_var = tk.StringVar(value="")
+        self.output_var = tk.StringVar(value="")
 
         # LLM IP address and port input in the GUI
         self.ip_label = tk.Label(self.frame, text = 'LLM address:port', font=('arial',10))
@@ -29,7 +29,7 @@ class DiagramProcessor:
         self.output_dir_entry = tk.Entry(self.frame, textvariable = self.output_var, font=('arial',10,'normal'), width=70, state="readonly")
         self.output_dir_btn=tk.Button(self.frame,text = '...', command = self.select_output_dir, width=10)
 
-        self.run_btn=tk.Button(self.frame, text = 'Download', command = self.run, width=30)
+        self.run_btn=tk.Button(self.frame, text = 'Run', command = self.run, width=30)
         self.status_label = tk.Label(self.frame, text = '', font = ('arial',10,'normal'))
 
         self.progressbar = ttk.Progressbar(self.frame, length=500)

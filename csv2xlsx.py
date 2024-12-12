@@ -65,7 +65,7 @@ def csv_to_xlsx(config, update):
 
     # Create columns for the sheets
     for sheet in workbook.worksheets():
-        sheet.write_row(0, 0, ["File", "Chapter", "Paragraph", "LLM Responseeeeee"], header_format) # headers
+        sheet.write_row(0, 0, ["File", "Chapter", "Paragraph", "LLM Response"], header_format) # headers
         sheet.set_column('A:A', 10)  # File column
         sheet.set_column('B:B', 18)  # Chapter column
         sheet.set_column('C:C', 45, wrap_format)  # Paragraph column
