@@ -1,3 +1,19 @@
+"""
+File: diagrams_gui.py
+Description: This script creates a GUI for the diagrams processer.
+
+Contributors:
+Adrian Hassa
+
+Created: 2024-12-02
+Last Modified: 2024-12-09
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
+"""
+
 import json
 import os
 import tkinter as tk

@@ -1,3 +1,22 @@
+"""
+File: generate_req.py
+Description: This script generates requirements by asking a generative AI to create a requirement for
+each paragraph where a given keyword is found.
+
+Contributors:
+Marcelo Santibáñez
+David Schön
+Adrian Hassa
+
+Created: 2024-10-11
+Last Modified: 2024-12-10
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
+"""
+
 import pandas as pd
 import json
 import requests

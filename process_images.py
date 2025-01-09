@@ -1,3 +1,23 @@
+"""
+File: process_images.py
+Description: This scipt takes a docx as input, and outputs a docx. It iterates through the images of the 
+input document, asking an LLM if it is an image of a sequence diagram. If it is, it asks the LLM again to 
+describe the diagram, appending the image with the AI description to the output document.
+
+Contributors:
+Marcelo Santibáñez
+David Schön
+Adrian Hassa
+
+Created: 2024-11-07
+Last Modified: 2024-12-10
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
+"""
+
 import os
 import requests
 import json

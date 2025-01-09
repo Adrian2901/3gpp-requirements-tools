@@ -1,3 +1,22 @@
+"""
+File: filter_docs.py
+Description: This scipt is part of the requirements generation. Filtering the documents 
+for the requirements generation.
+
+Contributors:
+David Schön
+Marcelo Santibáñez
+Adrian Hassa
+
+Created: 2024-09-29
+Last Modified: 2024-12-10
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
+"""
+
 import os
 import csv
 from docx import Document

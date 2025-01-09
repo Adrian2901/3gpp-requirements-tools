@@ -1,3 +1,20 @@
+"""
+File: main.py
+Description: This is the main.py script. Opens a gui with all different tools present.
+
+Contributors:
+David Schön
+Adrian Hassa
+
+Created: 2024-10-16
+Last Modified: 2024-12-10
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
+"""
+
 import json
 import tkinter as tk
 from tkinter import ttk

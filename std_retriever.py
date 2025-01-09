@@ -1,6 +1,21 @@
 """
-This script connects to the 3GPP FTP server to download specified standard files and stores them in the designated 'standards' folder.
+File: std_retriever.py
+Description: This script connects to the 3GPP FTP server to download specified standard
+files and stores them in the designated 'standards' folder.
 
+Contributors:
+Amirpooya Asadollahnejad
+David Schön
+Marcelo Santibáñez
+Adrian Hassa
+
+Created: 2024-10-12
+Last Modified: 2024-12-10
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
 """
 
 from ftplib import FTP, error_perm

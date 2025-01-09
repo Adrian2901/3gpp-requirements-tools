@@ -1,7 +1,24 @@
 """
-The csv2xlsx converter processes all the generated CSV files and converts them into a single XLSX file. It also highlights
-the keyword in the paragraph and requirement columns. The output XLSX file will have three sheets: new_requirements,
- latency_paragraphs, and latency_no_paragraphs.
+File: csv2xlsx.py
+Description: The csv2xlsx converter processes all the generated CSV files and converts them into a single XLSX file. It also 
+highlights the keyword in the paragraph and requirement columns. The output XLSX file will have three sheets: 
+- new_requirements
+- latency_paragraphs
+- latency_no_paragraphs
+
+Contributors:
+Amirpooya Asadollahnejad
+David Schön
+Marcelo Santibáñez
+Adrian Hassa
+
+Created: 2024-10-03
+Last Modified: 2024-12-10
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
 """
 
 import csv
