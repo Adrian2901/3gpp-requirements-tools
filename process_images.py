@@ -243,7 +243,7 @@ def process_docx(docx_path, output_folder, llm_address, update):
                 update(f"Error adding image {img_name} to the document.")
 
     output_doc.save(output_file_path)
-    update(f"Finished processing the document. Saved to {output_file_path}")
+    update(f"Finished processing the document. Check the output folder for the results.")
 
 
 if __name__ == "__main__":
