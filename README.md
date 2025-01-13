@@ -1,15 +1,14 @@
 # 3GPP Requirement Tools
 
 
-## :book: Table of Contents
+## 📕 Table of Contents
 - [About the project](#about-the-project)
 - [Solution Architecture](#solution-architecture)
 - [How to use](#how-to-use)
 - [Setup](#setup)
 - [Authors](#authors)
-- [License](#license)
 
-## :bulb: About the project
+## 💡About the project
 In this project we aimed to use the assisstance of the Large-language-Models(LLMs) in order to extract useful requirements from 3GPP standards.
 With advances in generative AI and large language models (LLMs), we can now leverage these tools to automate the extraction of requirements from complex technical documents. Traditionally, requirements elicitation from dense standards like 3GPP has been time-consuming and requires lot of manual work. This project aims to address these challenges by using LLMs to streamline the extraction process, reducing manual effort, improving accuracy, and making the process more efficient and reliable.
 
@@ -19,7 +18,7 @@ Tech stack used in the project:
 
 This repository was migrated from [miroslawstaron/requirements_standards](https://github.com/miroslawstaron/requirements_standards)
 
-## :triangular_ruler: Solution Architecture
+## 📐Solution Architecture
 
 <img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
@@ -37,8 +36,14 @@ For certain functionality to work one needs to setup a locally running LLM model
 - Sequence Diagram Retriever: Optional
 - Requirements Generator: Mandatory
 
+Script setup guide:
+1. Download and install Python 3.8+
+2. Navigate to the project folder and run `pip install -r requirements.txt` in the terminal to install dependencies
+3. Run the `main.py` script to open a window containing all tools
 
-## :wrench: How to use
+You can find executable files, which don't require any dependecies, on the [Releases page](https://github.com/Adrian2901/3gpp-requirements-tools/releases). 
+
+## 🔧How to use
 
 <img src="./diagrams-and-pictures/blue_divider_transparent.png" alt="Divider" style="width: 100%; display: block;">
 
@@ -85,7 +90,7 @@ For certain functionality to work one needs to setup a locally running LLM model
 12. Click "Run" and wait for the process to complete.  
     Once finished, check the output folder for the results.
 
-## :busts_in_silhouette: Authors
+## 👥Authors
 
 Adrian Hassa: [@Adrian2901](https://github.com/Adrian2901)
 
@@ -94,9 +99,3 @@ Amirpooya Asadollahnejad: [@amirpooya78](https://github.com/amirpooya78)
 David Schön: [@DavinciOfSweden](https://github.com/DavinciOfSweden)
 
 Marcelo Santibáñez: [@ssheloors](https://github.com/ssheloors)
-
-
-## :scroll: License
-
-
-
