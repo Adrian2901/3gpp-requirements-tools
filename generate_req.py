@@ -50,6 +50,11 @@ def ask_llm(paragraph, word):
     return json_data['response']
 
 def generate_req(config, update):
+    ''' 
+    Generate requirements from a list of paragraphs containing keywords.
+    :param config: The configuration dictionary
+    :param update: The function to update the GUI status and progress bar
+    '''
     llm_ip = config['llm_address']
     llm = config['model_name']
 

@@ -113,7 +113,9 @@ if __name__ == "__main__":
     diagrams_gui = DiagramProcessor(root, config)
     diagrams_gui.frame.pack(expand=True, fill="both")
 
+    # Set window size and disable resizing
     root.geometry("700x400")
+    root.resizable(False, False)
 
     # Run the application
     root.mainloop()

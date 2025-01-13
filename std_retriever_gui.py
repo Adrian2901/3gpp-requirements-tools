@@ -124,7 +124,9 @@ if __name__ == "__main__":
     std_retriever_gui = StdRetriever(root, config)
     std_retriever_gui.frame.pack(expand=True, fill="both")
 
+    # Set window size and disable resizing
     root.geometry("700x400")
+    root.resizable(False, False)
 
     # Run the application
     root.mainloop()
