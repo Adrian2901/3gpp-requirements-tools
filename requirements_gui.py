@@ -1,3 +1,19 @@
+"""
+File: requirements_gui.py
+Description: This script creates a GUI for the requirements generator.
+
+Contributors:
+Adrian Hassa
+
+Created: 2024-11-13
+Last Modified: 2024-12-09
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
+"""
+
 import json
 import os
 import tkinter as tk
@@ -6,7 +22,7 @@ import filter_docs
 import generate_req
 import csv2xlsx
 import threading
-
+import requests.exceptions
 
 class RequirementsGenerator:
     def __init__(self, root, config):
@@ -86,7 +102,7 @@ class RequirementsGenerator:
         self.config['folder_path'] = self.path_var.get()
         self.config['output_folder_path'] = self.output_var.get()
         self.config['keywords'] = self.keyword_var.get().split(",")
-        self.config['model_name'] = self.model_var
+        self.config['model_name'] = self.model_entry.get()
         self.config['checked_units'] = checked_units
 
         with open('config.json', 'w') as f:
@@ -111,22 +127,28 @@ class RequirementsGenerator:
             return
         self.run_btn.config(state=tk.DISABLED)
         self.update_status("Starting the filtering...")
-        try:
-            # Function to run on a separate thread
-            def run_tasks():
+        # Function to run on a separate thread
+        def run_tasks():
+            try:
                 filter_docs.execute_filtering(self.config, self.update_status)
                 generate_req.generate_req(self.config, self.update_status)
                 csv2xlsx.csv_to_xlsx(self.config, self.update_status)
-                self.run_btn.config(state=tk.NORMAL)
-            # Start the thread
-            task_thread = threading.Thread(target=run_tasks)
-            task_thread.start()
-        except Exception as e:
-            print(e)
-            self.update_status("An error occurred! Please try again.")
-
-    def on_model_select(self, event):
-        self.model_var = self.combo_box.get()
+            except requests.exceptions.ConnectionError as e:
+                print(e)
+                self.update_status("A connection error occurred! Please check the LLM address and try again.")
+            except KeyError as e:
+                print(e)
+                self.update_status("Error occured while fetching data! Please check the model name and try again.")
+            except ValueError as e:
+                print(e)
+                self.update_status("Error occured while processing data! Please check the input and try again.")
+            except Exception as e:
+                print(e)
+                self.update_status("An error occurred! Please try again.")
+            self.run_btn.config(state=tk.NORMAL)
+        # Start the thread
+        task_thread = threading.Thread(target=run_tasks)
+        task_thread.start()
 
     def select_path_dir(self):
         dir = filedialog.askdirectory()
@@ -154,8 +176,9 @@ if __name__ == "__main__":
     requirements_gui = RequirementsGenerator(root, config)
     requirements_gui.frame.pack(expand=True, fill="both")
 
-    # Set window size
+    # Set window size and disable resizing
     root.geometry("700x400")
+    root.resizable(False, False)
 
     # Run the application
     root.mainloop()

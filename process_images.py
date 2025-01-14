@@ -1,3 +1,23 @@
+"""
+File: process_images.py
+Description: This scipt takes a docx as input, and outputs a docx. It iterates through the images of the 
+input document, asking an LLM if it is an image of a sequence diagram. If it is, it asks the LLM again to 
+describe the diagram, appending the image with the AI description to the output document.
+
+Contributors:
+Marcelo Santibáñez
+David Schön
+Adrian Hassa
+
+Created: 2024-11-07
+Last Modified: 2024-12-10
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
+"""
+
 import os
 import requests
 import json
@@ -9,9 +29,12 @@ from docx.shared import Inches
 from docx2python import docx2python
 from PIL import Image
 
-def preprocess_image(image_path):
+def preprocess_image(image_path, blur=1):
     '''
     Preprocess the image by applying different kernels to make it easier for OCR to detect text.
+    :param image_path: The path to the image to be preprocessed
+    :param blur: The ksize of the blur kernel to be applied to the image
+    :return: The preprocessed image
     '''
     # Load the image
     img = cv2.imread(image_path)
@@ -35,7 +58,7 @@ def preprocess_image(image_path):
     binary_no_lines = cv2.subtract(binary, vertical_lines)
     
     # Apply slight blur to reduce noise
-    blurred_img = cv2.medianBlur(binary_no_lines, 1)
+    blurred_img = cv2.medianBlur(binary_no_lines, blur)
 
     # Invert the binary image
     preprocessed_img = cv2.bitwise_not(blurred_img)
@@ -45,6 +68,9 @@ def preprocess_image(image_path):
 def process_sequence_diagram(image_path, debug=False):
     ''' 
     Process a sequence diagram image to extract actors and messages.
+    :param image_path: The path to the image to be processed
+    :param debug: Boolean value to enable debug mode (saves intermediate images)
+    :return: A string containing the extracted actors and messages
     '''
     # Threshold for actors detection (anything above this threshold is considered an actor)
     actors_threshold = 0.08
@@ -147,6 +173,8 @@ def is_sequence_diagram(image_path, llm_address, prompts):
     '''
     Ask the multimodal LLM whether the attached image is a sequence diagram.
     :param image_path: The path to the image to be analyzed
+    :param llm_address: The address of the LLM model
+    :param prompts: The prompts dictionary
     :return: Boolean value indicating whether the image is a sequence diagram
     '''
     
@@ -184,6 +212,13 @@ def is_sequence_diagram(image_path, llm_address, prompts):
         return False
 
 def process_docx(docx_path, output_folder, llm_address, update):
+    ''' 
+    Process a .docx document to extract sequence diagrams and their descriptions.
+    :param docx_path: The path to the input .docx document
+    :param output_folder: The path to the output folder
+    :param llm_address: The address of the LLM model
+    :param update: The function to call to update the GUI status label and progress bar
+    '''
     output_file_path = os.path.join(output_folder, "diagrams.docx")
     output_folder = os.path.join(output_folder, "images")
 

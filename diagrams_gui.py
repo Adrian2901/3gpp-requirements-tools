@@ -1,3 +1,19 @@
+"""
+File: diagrams_gui.py
+Description: This script creates a GUI for the diagrams processer.
+
+Contributors:
+Adrian Hassa
+
+Created: 2024-12-02
+Last Modified: 2024-12-09
+
+Project: 3GPP Requirement Tools
+URL: https://github.com/Adrian2901/3gpp-requirements-tools
+
+License: MIT License (see LICENSE file for details)
+"""
+
 import json
 import os
 import tkinter as tk
@@ -97,7 +113,9 @@ if __name__ == "__main__":
     diagrams_gui = DiagramProcessor(root, config)
     diagrams_gui.frame.pack(expand=True, fill="both")
 
+    # Set window size and disable resizing
     root.geometry("700x400")
+    root.resizable(False, False)
 
     # Run the application
     root.mainloop()
